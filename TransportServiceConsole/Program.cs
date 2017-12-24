@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ModelService;
+
+namespace TransportServiceConsole
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var test = new Class1();
+            Console.WriteLine(test.X);
+        }
+    }
+}
