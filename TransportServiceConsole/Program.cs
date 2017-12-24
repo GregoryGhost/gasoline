@@ -11,8 +11,7 @@ namespace TransportServiceConsole
     {
         static void Main(string[] args)
         {
-            var test = new Class1();
-            Console.WriteLine(test.X);
+
         }
     }
 }
