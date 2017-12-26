@@ -4,7 +4,11 @@ module InspectorGadget =
     open System.Text.RegularExpressions
     open System.Globalization
 
-    let patternForName = @"^(\w-){1,20}$"
+    let minSymbol = 1
+    let maxSymbol = 20
+
+    let patternForName = 
+        sprintf @"^(\w-){%d, %d}$" minSymbol maxSymbol
     let patternLetters = @"^([a-zA-Z])+$"
     let patternNumbers = @"^([0-9])+$"
     let patternHyphen =  @"^-+$"
@@ -26,10 +30,10 @@ module InspectorGadget =
         | Empty
         | Unknown
         | Underline
-        | AboveTheMaximum
-        | BellowTheMinumum
+        | AboveTheMaximum of int
+        | BellowTheMinumum of int
     type RequirementsForVehicle =
-        | Name of Parameter list //1ый параметр - Letters, 2 - Numbers, 3 - Hyphen, 4 - Underline
+        | Name of Parameter list 
         | EnginePower of Parameter
         | TankCapacity of Parameter
         | Weight of Parameter
@@ -39,6 +43,8 @@ module InspectorGadget =
     ///TODO: проверить работоспособность функции с помощью тестов
     ///TODO: вынести вспомогательные функции из замыкания функции check
     ///</summary>
+    let test = Parameter.AboveTheMaximum(maxSymbol)
+    
     let check (vehicle : Vehicle) =
         let checkName = 
             let isOk = 
@@ -62,6 +68,18 @@ module InspectorGadget =
                 let checkUnderline =
                     (vehicle.name, patternUnderline)
                     |> Regex.IsMatch
+                let checkAboveMax = 
+                    vehicle.name
+                    |> String.length > maxSymbol
+                let checkBellowMin =
+                    vehicle.name
+                    |> String.length < minSymbol
+                
+                if checkAboveMax then
+                    names <- AboveTheMaximum(maxSymbol) :: names
+
+                if checkBellowMin then
+                    names <- BellowTheMinumum(minSymbol) :: names
 
                 if checkEmpty then
                     names <- Empty :: names
@@ -79,34 +97,49 @@ module InspectorGadget =
                     names <- Underline :: names
 
                 if (List.length names) = 0 then
-                    RequirementsForVehicle.Name([Unknown]) |> Some
+                    [Unknown]
+                    |> RequirementsForVehicle.Name
+                    |> Some
                 else
-                    RequirementsForVehicle.Name(names)
+                    names
+                    |> RequirementsForVehicle.Name
                     |> Some
         let checkEnginePower = 
                 if vehicle.enginePower > maxEnginePower then
-                    RequirementsForVehicle.EnginePower(AboveTheMaximum)
+                    maxEnginePower
+                    |> AboveTheMaximum
+                    |> RequirementsForVehicle.EnginePower
                     |> Some
                 elif vehicle.enginePower < minEnginePower then
-                    RequirementsForVehicle.EnginePower(BellowTheMinumum)
+                    minEnginePower
+                    |> BellowTheMinumum
+                    |> RequirementsForVehicle.EnginePower
                     |> Some
                 else
                     None
         let checkTankCapacity = 
                 if vehicle.tankCapacity > maxTankCapacity then
-                    RequirementsForVehicle.TankCapacity(AboveTheMaximum)
+                    maxTankCapacity
+                    |> AboveTheMaximum
+                    |> RequirementsForVehicle.TankCapacity
                     |> Some
                 elif vehicle.tankCapacity < minTankCapacity then
-                    RequirementsForVehicle.TankCapacity(BellowTheMinumum)
+                    minTankCapacity
+                    |> BellowTheMinumum
+                    |> RequirementsForVehicle.TankCapacity
                     |> Some
                 else 
                     None
         let checkWeight = 
                 if vehicle.weight < minWeight then
-                    RequirementsForVehicle.Weight(BellowTheMinumum)
+                    int minWeight
+                    |> BellowTheMinumum
+                    |> RequirementsForVehicle.Weight
                     |> Some
                 elif vehicle.weight > maxWeight then
-                    RequirementsForVehicle.Weight(AboveTheMaximum)
+                    int maxWeight
+                    |> AboveTheMaximum
+                    |> RequirementsForVehicle.Weight
                     |> Some
                 else    
                     None
@@ -119,9 +152,26 @@ module InspectorGadget =
 
 module Test = 
     open InspectorGadget
+
     let v = new Vehicle()
     let validPorche = new Vehicle("porche_911_GT-x", 512, 500.0, Environment.Asphalt, 200)
     let invalidLamba = new Vehicle("lamba", -1, -1., Environment.Asphalt, -200)
+
     check v |> ignore
     check validPorche |> ignore
     check invalidLamba |> ignore 
+
+module Test2 =
+    type A = A of int
+    type B = B of string
+    type C =
+        static member getValue (B v) = v
+        static member getValue (A v) = v
+
+    let test = A 12
+    let test1 = B "test"
+
+    let t = 
+        C.getValue test
+    let t2 =
+        C.getValue test1
