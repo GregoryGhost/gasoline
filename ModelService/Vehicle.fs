@@ -1,12 +1,13 @@
 ﻿namespace ModelService
 
+//Изменил тип DU на enum, чтобы было проще сериализовать в JSON и обратно
 type Environment = 
-    | Air
-    | Ground
-    | Asphalt
-    | Dirt  //грязь
-    | Space
-    | RuggedTerrain //пересеченная местность
+    | Air = 1
+    | Ground = 2
+    | Asphalt = 3
+    | Dirt = 4 //грязь
+    | Space = 5
+    | RuggedTerrain = 6//пересеченная местность
 
 type Vehicle =
     (* тип транспортного средства для ООП-совместимости с dotNET *)
