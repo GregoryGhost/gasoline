@@ -1,4 +1,7 @@
 ﻿namespace ModelService
+
+open System.Xml
+
 module JsonHelper =
  open FSharp.Data
  open FSharp.Data.JsonExtensions
@@ -37,14 +40,62 @@ module JsonHelper =
          sw.Close()
      write
  
- type writeJson = JParameters list-> unit
- type readJson = unit -> JParameters list
+ type writeJson = JParameters.Root list-> unit
+ type readJson = unit -> Vehicle list
 
- type toJson = Vehicle -> JParameters
- type toJsons = Vehicle list -> JRecords
+ type toJson = Vehicle -> JParameters.Root
+ type toJsons = Vehicle list -> JRecords.Root
 
- type toVehicles = JRecords -> Vehicle list
- type toVehicle = JParameters -> Vehicle
+ type toVehicles = JRecords.Root -> Vehicle list
+ type toVehicle = JParameters.Root -> Vehicle
+
+  (*| Air = 1
+    | Ground = 2
+    | Asphalt = 3
+    | Dirt = 4 //грязь
+    | Space = 5
+    | RuggedTerrain = 6//пересеченная местность*)
+  let toResistance = function
+    | 1 -> Air
+    | 2 -> Ground
+    | 3 -> Asphalt
+    | 4 -> Dirt
+    | 5 -> Space
+    | 6 -> RuggedTerrain
+
+ let toVehicle : toVehicle =
+    fun r ->
+        let v = {
+                name = r.Name;
+                enginePower = r.EnginePower;
+                weight = double r.Weight;
+                resistanceWithMedian = r.ResistanceWithMedian 
+                      |> toResistance;
+                tankCapacity = r.TankCapacity
+        }
+        v
+
+ let toVehicles : toVehicles =
+    let mutable vehicles : Vehicle list = []
+    fun jrecords -> 
+        for r in jrecords do
+           r |> toVehicle
+           vehicles <- v :: vehicles 
+        vehicles
+
+ let writeJson : writeJson = 
+    fun jparams ->
+        let sw = new System.IO.StreamWriter(s)
+        jparams
+        |> List.iter (fun x -> 
+                        x.Root.ToString() 
+                        |> sw.WriteLine)
+ 
+ let readJson : readJson = 
+    let readFromFile = JRecords.Load(s)
+    readFromFile
+    |> toVehicles
+
 //Десерилизация данных из JSON файла
  let readJson =
      let testP = JRecords.Load(s)
