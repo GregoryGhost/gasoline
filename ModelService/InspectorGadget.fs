@@ -153,25 +153,11 @@ module InspectorGadget =
 module Test = 
     open InspectorGadget
 
-    let v = new Vehicle()
-    let validPorche = new Vehicle("porche_911_GT-x", 512, 500.0, Environment.Asphalt, 200)
-    let invalidLamba = new Vehicle("lamba", -1, -1., Environment.Asphalt, -200)
+    let validPorche = {
+        name = "porche_911_GT-x";
+        enginePower = 512; 
+        weight = 500.; 
+        resistanceWithMedian = Environment.Asphalt; 
+        tankCapacity = 200 }
 
-    check v |> ignore
     check validPorche |> ignore
-    check invalidLamba |> ignore 
-
-module Test2 =
-    type A = A of int
-    type B = B of string
-    type C =
-        static member getValue (B v) = v
-        static member getValue (A v) = v
-
-    let test = A 12
-    let test1 = B "test"
-
-    let t = 
-        C.getValue test
-    let t2 =
-        C.getValue test1
