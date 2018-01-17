@@ -1,70 +1,65 @@
 ﻿namespace ModelService
 
-open System.Xml
-
-module JsonHelper =
+module private Converter = 
+ open System.IO
  open FSharp.Data
- open FSharp.Data.JsonExtensions
 
  type JParameters = JsonProvider<"""{
-       "name" : "mazda rx-7",
-       "enginePower" : 10,
-       "weight" : 10.2,
+                       "name" : "mazda rx-7",
+                "enginePower" : 10,
+                     "weight" : 10.2,
        "resistanceWithMedian" : 1,
-       "tankCapacity": 10
+                "tankCapacity": 10
        }""">
 
  type JRecords = JsonProvider<"""[{
+                       "name" : "mazda rx-7",
+                "enginePower" : 10,
+                     "weight" : 10.2,
+       "resistanceWithMedian" : 1,
+                "tankCapacity": 10
+       }]""">
+ 
+
+ //NOTE: пример вывода json записей типа JRecords
+ //TODO: перенести функцию test к тестам на Fuchu
+ let test =
+    let json = """[{
        "name" : "mazda rx-7",
        "enginePower" : 10,
        "weight" : 10.2,
        "resistanceWithMedian" : 1,
        "tankCapacity": 10
-       }]""">
+       },
+       {
+       "name" : "mazda rx-7",
+       "enginePower" : 10,
+       "weight" : 1234.222,
+       "resistanceWithMedian" : 3,
+       "tankCapacity": 102
+       },
+       {
+       "name" : "mazda rx-8",
+       "enginePower" : 102,
+       "weight" : 10.21234,
+       "resistanceWithMedian" : 6,
+       "tankCapacity": 1234
+       }]"""
+    let jtest = JRecords.Parse(json)
+    for v in jtest do 
+        v.JsonValue.ToString()
+        |> printfn "ep=%s" 
  
- let s = "test.json"
-//TODO: сделать нормальную сериализацию списка Vehicle в JSON
- //let writeJSON v
- //Серилизация данных JSON в файл
- let writeJson =
-     let t = JParameters.GetSample().ToString()
-     let write v  =
-         let sw = new System.IO.StreamWriter(s)
-         let w =
-             sw.WriteLine "["
-             for i=1 to 10 do
-                 t+"," |> sw.WriteLine
-             t |> sw.WriteLine
-             sw.WriteLine "]"
-         w
-         sw.Close()
-     write
- 
- type writeJson = JParameters.Root list-> unit
- type readJson = unit -> Vehicle list
+ let toResistance = function
+        | 1 -> Environment.Air
+        | 2 -> Environment.Ground
+        | 3 -> Environment.Asphalt
+        | 4 -> Environment.Dirt
+        | 5 -> Environment.Space
+        | 6 -> Environment.RuggedTerrain
+        | _ -> Environment.NANI
 
- type toJson = Vehicle -> JParameters.Root
- type toJsons = Vehicle list -> JRecords.Root
-
- type toVehicles = JRecords.Root -> Vehicle list
- type toVehicle = JParameters.Root -> Vehicle
-
-  (*| Air = 1
-    | Ground = 2
-    | Asphalt = 3
-    | Dirt = 4 //грязь
-    | Space = 5
-    | RuggedTerrain = 6//пересеченная местность*)
-  let toResistance = function
-    | 1 -> Air
-    | 2 -> Ground
-    | 3 -> Asphalt
-    | 4 -> Dirt
-    | 5 -> Space
-    | 6 -> RuggedTerrain
-
- let toVehicle : toVehicle =
-    fun r ->
+ let toVehicle (r : JRecords.Root) = 
         let v = {
                 name = r.Name;
                 enginePower = r.EnginePower;
@@ -74,32 +69,62 @@ module JsonHelper =
                 tankCapacity = r.TankCapacity
         }
         v
-
- let toVehicles : toVehicles =
-    let mutable vehicles : Vehicle list = []
-    fun jrecords -> 
+ 
+ let toVehicles (jrecords : JRecords.Root[]) =
+        let mutable vehicles : Vehicle list = []
         for r in jrecords do
-           r |> toVehicle
-           vehicles <- v :: vehicles 
+            let v = 
+                r 
+                |> toVehicle
+            vehicles <- v :: vehicles 
         vehicles
 
- let writeJson : writeJson = 
-    fun jparams ->
-        let sw = new System.IO.StreamWriter(s)
-        jparams
-        |> List.iter (fun x -> 
-                        x.Root.ToString() 
-                        |> sw.WriteLine)
- 
- let readJson : readJson = 
-    let readFromFile = JRecords.Load(s)
-    readFromFile
-    |> toVehicles
+ let toJson (v : Vehicle) =
+        JParameters.Root(v.name,
+                         v.enginePower, 
+                         decimal v.weight, 
+                         int v.resistanceWithMedian, 
+                         v.tankCapacity)
 
-//Десерилизация данных из JSON файла
- let readJson =
-     let testP = JRecords.Load(s)
-     let print =
-         for v in testP do
-             printfn "%d" v.EnginePower
-     print
+ let toJsons (vehicles : Vehicle list) =
+        vehicles
+        |> List.map (fun vehicle ->
+                        vehicle |> toJson)
+
+//TODO: сделать обработку исключительных ситуаций для StreamWriter
+ let writeJson (jparams : JParameters.Root list) (path : string) =
+        let sw = new StreamWriter(path)
+        sw.WriteLine "["
+        jparams
+        |> List.iter (fun r -> 
+                        r.JsonValue.ToString() + ","
+                        |> sw.WriteLine)
+        sw.WriteLine "]"
+        sw.Close()
+
+module JsonHelper =
+ open Converter
+
+ /// <summary>
+ /// Десериализует JSON данные Vehicle из файла
+ /// </summary>
+ /// <param name="path">Путь к JSON файлу с сериализованными данными Vehicle</param>
+ /// <returns>Возвращает десериализованный список с записями Vehicle</returns>
+ let readFromJson (path : string) : Vehicle list =
+        if !(File.Exists path) then []
+        else
+            let readFromFile = JRecords.Load(path)
+            readFromFile
+            |> toVehicles
+
+ /// <summary>
+ /// Сериализует записи Vehicle в JSON файл
+ /// </summary>
+ /// <param name="vehicles">Список записей Vehicle для сериализации в JSON</param>
+ /// <param name="path">Путь к JSON файлу для сериализации</param>
+ /// <returns></returns>
+ let writeToJson (vehicles : Vehicle list) ( path : string) : unit =
+        let jparams = 
+            vehicles
+            |> toJsons
+        writeJson jparams path
