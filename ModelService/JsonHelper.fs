@@ -1,7 +1,7 @@
 ﻿namespace ModelService
+open System.IO
 
 module private Converter = 
- open System.IO
  open FSharp.Data
 
  type JParameters = JsonProvider<"""{
@@ -19,11 +19,10 @@ module private Converter =
        "resistanceWithMedian" : 1,
                 "tankCapacity": 10
        }]""">
- 
 
  //NOTE: пример вывода json записей типа JRecords
  //TODO: перенести функцию test к тестам на Fuchu
- let test =
+ (*let test =
     let json = """[{
        "name" : "mazda rx-7",
        "enginePower" : 10,
@@ -48,7 +47,7 @@ module private Converter =
     let jtest = JRecords.Parse(json)
     for v in jtest do 
         v.JsonValue.ToString()
-        |> printfn "ep=%s" 
+        |> printfn "ep=%s" *)
  
  let toResistance = function
         | 1 -> Environment.Air
@@ -93,7 +92,7 @@ module private Converter =
 
 //TODO: сделать обработку исключительных ситуаций для StreamWriter
  let writeJson (jparams : JParameters.Root list) (path : string) =
-        let sw = new StreamWriter(path)
+        use sw = new StreamWriter(path)
         sw.WriteLine "["
         jparams
         |> List.iter (fun r -> 
@@ -111,7 +110,7 @@ module JsonHelper =
  /// <param name="path">Путь к JSON файлу с сериализованными данными Vehicle</param>
  /// <returns>Возвращает десериализованный список с записями Vehicle</returns>
  let readFromJson (path : string) : Vehicle list =
-        if !(File.Exists path) then []
+        if not(System.IO.File.Exists path) then []
         else
             let readFromFile = JRecords.Load(path)
             readFromFile
