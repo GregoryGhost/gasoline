@@ -94,10 +94,11 @@ module private Converter =
  let writeJson (jparams : JParameters.Root list) (path : string) =
         use sw = new StreamWriter(path)
         sw.WriteLine "["
-        jparams
-        |> List.iter (fun r -> 
-                        r.JsonValue.ToString() + ","
-                        |> sw.WriteLine)
+        for i = 0 to jparams.Length-1 do
+            let mutable r = jparams.[i].ToString()
+            if (i + 1 <= jparams.Length-1) then
+                r <- r + ","
+            r |> sw.WriteLine
         sw.WriteLine "]"
         sw.Close()
 
