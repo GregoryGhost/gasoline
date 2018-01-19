@@ -1,6 +1,6 @@
 ﻿namespace ModelService
 
-module InspectorGadget =
+module internal InspectorGadget =
     open System.Text.RegularExpressions
     open System.Globalization
 
@@ -150,7 +150,7 @@ module InspectorGadget =
                             | Some(y) -> true
                             | None -> false)
 
-module Test = 
+module internal Test = 
     open InspectorGadget
 
     let validPorche = {

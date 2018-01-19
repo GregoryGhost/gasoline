@@ -102,7 +102,7 @@ module private Converter =
         sw.WriteLine "]"
         sw.Close()
 
-module JsonHelper =
+module internal JsonHelper =
  open Converter
 
  /// <summary>
