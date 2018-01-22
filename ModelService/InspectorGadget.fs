@@ -9,29 +9,14 @@ module Demands =
         | Unknown
         | Underline
         | AboveTheMaximum of int
-        | BellowTheMinumum of int
+        | BelowTheMinimum of int
     type RequirementsForVehicle =
         | Name of Parameter list 
         | EnginePower of Parameter
         | TankCapacity of Parameter
         | Weight of Parameter
         | ExistsElem
-
-module internal InspectorGadget =
-    open System.Text.RegularExpressions
-    open System.Globalization
-    open Demands
-
-    let minSymbol = 1
-    let maxSymbol = 20
-
-    let patternForName = 
-        sprintf @"^(\w-){%d, %d}$" minSymbol maxSymbol
-    let patternLetters = @"^([a-zA-Z])+$"
-    let patternNumbers = @"^([0-9])+$"
-    let patternHyphen =  @"^-+$"
-    let patternUnderline = @"^_+$"
-
+        
     let minEnginePower = 0
     let maxEnginePower = int (10.**9.)
 
@@ -40,6 +25,21 @@ module internal InspectorGadget =
     
     let minWeight = 1.
     let maxWeight = 10000.
+
+    let minSymbol = 1
+    let maxSymbol = 20
+
+module internal InspectorGadget =
+    open System.Text.RegularExpressions
+    open System.Globalization
+    open Demands
+
+    let patternForName = 
+        sprintf @"^(\w-){%d, %d}$" minSymbol maxSymbol
+    let patternLetters = @"^([a-zA-Z])+$"
+    let patternNumbers = @"^([0-9])+$"
+    let patternHyphen =  @"^-+$"
+    let patternUnderline = @"^_+$"
 
     ///<summary>
     ///Получает запись об транспортном средстве и проверяет ее поля на удовлетворение требованиям.
@@ -85,7 +85,7 @@ module internal InspectorGadget =
                     names <- AboveTheMaximum(maxSymbol) :: names
 
                 if checkBellowMin then
-                    names <- BellowTheMinumum(minSymbol) :: names
+                    names <- BelowTheMinimum(minSymbol) :: names
 
                 if not checkLetters then 
                     names <- Letters :: names
@@ -115,7 +115,7 @@ module internal InspectorGadget =
                     |> Some
                 elif vehicle.enginePower < minEnginePower then
                     minEnginePower
-                    |> BellowTheMinumum
+                    |> BelowTheMinimum
                     |> RequirementsForVehicle.EnginePower
                     |> Some
                 else
@@ -128,7 +128,7 @@ module internal InspectorGadget =
                     |> Some
                 elif vehicle.tankCapacity < minTankCapacity then
                     minTankCapacity
-                    |> BellowTheMinumum
+                    |> BelowTheMinimum
                     |> RequirementsForVehicle.TankCapacity
                     |> Some
                 else 
@@ -136,7 +136,7 @@ module internal InspectorGadget =
         let checkWeight = 
                 if vehicle.weight < minWeight then
                     int minWeight
-                    |> BellowTheMinumum
+                    |> BelowTheMinimum
                     |> RequirementsForVehicle.Weight
                     |> Some
                 elif vehicle.weight > maxWeight then
