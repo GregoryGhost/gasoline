@@ -17,13 +17,20 @@ namespace TransportServiceConsole
             c.AddVehicle(vehicle);
             c.AddVehicle(vehicle);
             var path = System.IO.Directory.GetCurrentDirectory() + "\\" + "test.json";
-            c.Save(path);
-            c.Load(path);
+            //c.Save(path);
+            try
+            {
+                c.Load(path);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("{0}", e.Message);
+            }
             var t = c.GetAllVehicles;
             WriteAllVehicle(t);
         }
 
-        static void WriteAllVehicle(Vehicle[] vehicles)
+        static void WriteAllVehicle(IEnumerable<Vehicle> vehicles)
         {
             foreach (var e in vehicles)
             {

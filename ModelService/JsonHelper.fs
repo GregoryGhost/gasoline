@@ -19,35 +19,6 @@ module private Converter =
        "resistanceWithMedian" : 1,
                 "tankCapacity": 10
        }]""">
-
- //NOTE: пример вывода json записей типа JRecords
- //TODO: перенести функцию test к тестам на Fuchu
- (*let test =
-    let json = """[{
-       "name" : "mazda rx-7",
-       "enginePower" : 10,
-       "weight" : 10.2,
-       "resistanceWithMedian" : 1,
-       "tankCapacity": 10
-       },
-       {
-       "name" : "mazda rx-7",
-       "enginePower" : 10,
-       "weight" : 1234.222,
-       "resistanceWithMedian" : 3,
-       "tankCapacity": 102
-       },
-       {
-       "name" : "mazda rx-8",
-       "enginePower" : 102,
-       "weight" : 10.21234,
-       "resistanceWithMedian" : 6,
-       "tankCapacity": 1234
-       }]"""
-    let jtest = JRecords.Parse(json)
-    for v in jtest do 
-        v.JsonValue.ToString()
-        |> printfn "ep=%s" *)
  
  let toResistance = function
         | 1 -> Environment.Air
@@ -65,16 +36,13 @@ module private Converter =
                 weight = double r.Weight;
                 resistanceWithMedian = r.ResistanceWithMedian 
                       |> toResistance;
-                tankCapacity = r.TankCapacity
-        }
+                tankCapacity = r.TankCapacity}
         v
  
  let toVehicles (jrecords : JRecords.Root[]) =
         let mutable vehicles : Vehicle list = []
         for r in jrecords do
-            let v = 
-                r 
-                |> toVehicle
+            let v = r |> toVehicle
             vehicles <- v :: vehicles 
         vehicles
 
@@ -90,7 +58,6 @@ module private Converter =
         |> List.map (fun vehicle ->
                         vehicle |> toJson)
 
-//TODO: сделать обработку исключительных ситуаций для StreamWriter
  let writeJson (jparams : JParameters.Root list) (path : string) =
         use sw = new StreamWriter(path)
         sw.WriteLine "["
@@ -111,11 +78,9 @@ module internal JsonHelper =
  /// <param name="path">Путь к JSON файлу с сериализованными данными Vehicle</param>
  /// <returns>Возвращает десериализованный список с записями Vehicle</returns>
  let readFromJson (path : string) : Vehicle list =
-        if not(System.IO.File.Exists path) then []
-        else
-            let readFromFile = JRecords.Load(path)
-            readFromFile
-            |> toVehicles
+        let readFromFile = JRecords.Load(path)
+        readFromFile
+        |> toVehicles
 
  /// <summary>
  /// Сериализует записи Vehicle в JSON файл
