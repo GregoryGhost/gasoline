@@ -1,8 +1,26 @@
 ﻿namespace ModelService
 
+module Demands =
+    type Parameter =
+        | Letters
+        | Numbers
+        | Hyphen //дефис
+        | Empty
+        | Unknown
+        | Underline
+        | AboveTheMaximum of int
+        | BellowTheMinumum of int
+    type RequirementsForVehicle =
+        | Name of Parameter list 
+        | EnginePower of Parameter
+        | TankCapacity of Parameter
+        | Weight of Parameter
+        | ExistsElem
+
 module internal InspectorGadget =
     open System.Text.RegularExpressions
     open System.Globalization
+    open Demands
 
     let minSymbol = 1
     let maxSymbol = 20
@@ -23,29 +41,14 @@ module internal InspectorGadget =
     let minWeight = 1.
     let maxWeight = 10000.
 
-    type Parameter =
-        | Letters
-        | Numbers
-        | Hyphen //дефис
-        | Empty
-        | Unknown
-        | Underline
-        | AboveTheMaximum of int
-        | BellowTheMinumum of int
-    type RequirementsForVehicle =
-        | Name of Parameter list 
-        | EnginePower of Parameter
-        | TankCapacity of Parameter
-        | Weight of Parameter
     ///<summary>
     ///Получает запись об транспортном средстве и проверяет ее поля на удовлетворение требованиям.
     ///Возвращает список ошибочных полей
     ///TODO: проверить работоспособность функции с помощью тестов
     ///TODO: вынести вспомогательные функции из замыкания функции check
     ///</summary>
-    let test = Parameter.AboveTheMaximum(maxSymbol)
     
-    let check (vehicle : Vehicle) =
+    let validate (vehicle : Vehicle) =
         let checkName = 
             let isOk = 
                 (vehicle.name, patternForName)
@@ -75,25 +78,25 @@ module internal InspectorGadget =
                     vehicle.name
                     |> String.length < minSymbol
                 
+                if checkEmpty then
+                    names <- Empty :: names
+
                 if checkAboveMax then
                     names <- AboveTheMaximum(maxSymbol) :: names
 
                 if checkBellowMin then
                     names <- BellowTheMinumum(minSymbol) :: names
 
-                if checkEmpty then
-                    names <- Empty :: names
-
-                if checkLetters then 
+                if not checkLetters then 
                     names <- Letters :: names
 
-                if checkNumbers then 
+                if not checkNumbers then 
                     names <- Numbers :: names
 
-                if checkHyphen then
+                if not checkHyphen then
                     names <- Hyphen :: names
 
-                if checkUnderline then
+                if not checkUnderline then
                     names <- Underline :: names
 
                 if (List.length names) = 0 then
@@ -143,21 +146,23 @@ module internal InspectorGadget =
                     |> Some
                 else    
                     None
-         
+
         [checkName; checkEnginePower; checkTankCapacity; checkWeight]
-        |> List.filter (fun x -> 
-                            match x with
-                            | Some(y) -> true
-                            | None -> false)
+        |> List.filter (function 
+                        |Some x -> true 
+                        | None -> false) 
+        |> List.map (Option.get)
+        |> List.toSeq
 
 module internal Test = 
     open InspectorGadget
 
     let validPorche = {
         name = "porche_911_GT-x";
-        enginePower = 512; 
+        enginePower = 200; 
         weight = 500.; 
         resistanceWithMedian = Environment.Asphalt; 
         tankCapacity = 200 }
-
-    check validPorche |> ignore
+    let invalidPorche = {validPorche with name = ""}
+    let c = validate validPorche
+    let c1 = validate invalidPorche

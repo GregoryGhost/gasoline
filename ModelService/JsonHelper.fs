@@ -122,9 +122,9 @@ module internal JsonHelper =
  /// </summary>
  /// <param name="vehicles">Список записей Vehicle для сериализации в JSON</param>
  /// <param name="path">Путь к JSON файлу для сериализации</param>
- /// <returns></returns>
- let writeToJson (vehicles : Vehicle list) ( path : string) : unit =
-        let jparams = 
-            vehicles
-            |> toJsons
-        writeJson jparams path
+ let writeToJson (vehicles : Vehicle list) (path : string) : unit =
+        if List.isEmpty vehicles then 
+            ()
+        else
+            let jparams = vehicles |> toJsons
+            writeJson jparams path
