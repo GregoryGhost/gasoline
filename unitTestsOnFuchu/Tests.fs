@@ -3,44 +3,11 @@
 module Tests =
     open Fuchu.Tests
     open Fuchu
-    open ModelService
-    open ModelService.Demands
-
-    let validVehicle = {name = "mazda_rx-8"; 
-            enginePower = 192;
-            weight = 1429.0;
-            resistanceWithMedian = Environment.Asphalt;
-            tankCapacity = 65;}
-
-    let autoShow = AutoShow.Instance
+    open Var
 
     let suite =
         TestList [
-            testList "Add vehicle to auto show" [
-                testCase "correct vehicle properties" <| (fun _ ->
-                    autoShow.ClearAllVehicle()
-                    let errors = autoShow.AddVehicle validVehicle
-                    let expected = Seq.empty
-
-                    Assert.Equal("", expected, errors)
-                );
-
-                testCase "invalid vehicle enginePower - below zero" <| (fun _ ->
-                    let v1 = {validVehicle with enginePower = -192}
-
-                    autoShow.ClearAllVehicle()
-                    let errors = autoShow.AddVehicle v1
-                    let expected = 
-                        let er = [
-                            Demands.minEnginePower
-                            |> BelowTheMinimum
-                            |> RequirementsForVehicle.EnginePower
-                        ] 
-                        er |> List.toSeq
-
-                    Assert.Equal("", expected, errors)
-                );
-            ];
+            TestListAddVehicle.testAddVehicle;
             testList "Update vehicle to auto show" [
                 testCase "new record" <| (fun _ ->
                     let newV = {validVehicle with enginePower = 225}
