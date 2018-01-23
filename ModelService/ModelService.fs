@@ -36,7 +36,7 @@ type AutoShow private () =
     /// <param name="vehicle">Запись об характеристиках транспортного средства</param>
     /// <returns>Возвращает последовательность ошибочных полей в записе</returns>
     /// <exception cref="System.NullReferenceException">Параметр vehicle имеет значение null</exception>
-    member this.AddVehicle (vehicle : Vehicle) =
+    member this.AddVehicle (vehicle : Vehicle) : seq<RequirementsForVehicle> =
         let errors = vehicle |> InspectorGadget.validate
         if Seq.isEmpty errors then
             if this.existsElem vehicle then
@@ -55,7 +55,7 @@ type AutoShow private () =
     /// <param name="replaceVehicle">Новая запись транспортного средства</param>
     /// <returns>Возвращает последовательность ошибочных полей в новой записе.</returns>
     /// <exception cref="System.NullReferenceException">Параметр vehicle или replaceVehicle имеет значение null</exception>
-    member this.UpdateVehicle (vehicle : Vehicle, replaceVehicle : Vehicle) =
+    member this.UpdateVehicle (vehicle : Vehicle, replaceVehicle : Vehicle) : seq<RequirementsForVehicle> =
         let isValidVehicle = 
             replaceVehicle
             |> InspectorGadget.validate
