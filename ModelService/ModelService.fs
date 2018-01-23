@@ -3,6 +3,18 @@
 open Demands
 open System
 
+type Manager =
+    /// <summary>
+    /// Считает расход топлива для транспортного средства
+    /// </summary>
+    /// <returns>Возвращает строку с расходом топлива</returns>
+    static member CalcFuelConsumption (vehicle : Vehicle) : string = 
+            let isOK =  vehicle |> InspectorGadget.validate |> Seq.isEmpty
+            if isOK then 
+                vehicle.CalcFuelConsumption.ToString()
+            else
+                Environment.NANI.ToString()
+
 type AutoShow private () =
     let mutable vehicles : Vehicle list = []
 

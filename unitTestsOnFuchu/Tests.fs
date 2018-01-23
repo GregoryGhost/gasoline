@@ -4,10 +4,30 @@ module Tests =
     open Fuchu.Tests
     open Fuchu
     open Var
+    open ModelService
 
     let suite =
         TestList [
             TestListAddVehicle.testAddVehicle;
+            testList "Calculate fuel consumption of vehicle" [
+                testCase "valid vehicle" <| (fun _ ->
+                    let v = {validVehicle with resistanceWithMedian = Environment.NANI}
+
+                    let mes = Manager.CalcFuelConsumption(v)
+                    let expected = "0"
+
+                    Assert.Equal("", expected, mes)
+                );
+
+                testCase "invalid vehicle" <| (fun _ ->
+                    let invalidVehicle = {validVehicle with enginePower = Demands.maxEnginePower + 10}
+
+                    let mes = Manager.CalcFuelConsumption(invalidVehicle)
+                    let expected = Environment.NANI.ToString()
+
+                    Assert.Equal("", expected, mes)
+                );
+            ];
             testList "Update vehicle to auto show" [
                 testCase "new record" <| (fun _ ->
                     let newV = {validVehicle with enginePower = 225}

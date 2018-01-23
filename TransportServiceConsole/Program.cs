@@ -17,7 +17,7 @@ namespace TransportServiceConsole
             c.AddVehicle(vehicle);
             c.AddVehicle(vehicle);
             var path = System.IO.Directory.GetCurrentDirectory() + "\\" + "test.json";
-            //c.Save(path);
+            c.Save(path);
             try
             {
                 c.Load(path);
@@ -26,6 +26,7 @@ namespace TransportServiceConsole
             {
                 Console.WriteLine("{0}", e.Message);
             }
+            
             var t = c.GetAllVehicles;
             WriteAllVehicle(t);
         }
@@ -35,6 +36,7 @@ namespace TransportServiceConsole
             foreach (var e in vehicles)
             {
                 Console.WriteLine(e.ToString());
+                Console.WriteLine("Расход топлива: {0}", Manager.CalcFuelConsumption(e));
             }
         }
     }
