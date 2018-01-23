@@ -12,6 +12,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportServiceConsole", "
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ModelService", "ModelService\ModelService.fsproj", "{B8889DDB-AC55-44CF-91D9-D84F340019C3}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "unitTestsOnFuchu", "unitTestsOnFuchu\unitTestsOnFuchu.fsproj", "{20C5A889-B9E3-40F5-AF9A-DC379D8F8786}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B8889DDB-AC55-44CF-91D9-D84F340019C3} = {B8889DDB-AC55-44CF-91D9-D84F340019C3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +35,10 @@ Global
 		{B8889DDB-AC55-44CF-91D9-D84F340019C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8889DDB-AC55-44CF-91D9-D84F340019C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8889DDB-AC55-44CF-91D9-D84F340019C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C5A889-B9E3-40F5-AF9A-DC379D8F8786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C5A889-B9E3-40F5-AF9A-DC379D8F8786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C5A889-B9E3-40F5-AF9A-DC379D8F8786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C5A889-B9E3-40F5-AF9A-DC379D8F8786}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
