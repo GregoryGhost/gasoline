@@ -2,12 +2,8 @@
 
 module Demands =
     type Parameter =
-        | Letters
-        | Numbers
-        | Hyphen //дефис
         | Empty
-        | Unknown
-        | Underline
+        | InvalidCharacter
         | AboveTheMaximum of int
         | BelowTheMinimum of int
     type RequirementsForVehicle =
@@ -26,7 +22,7 @@ module Demands =
     let minWeight = 1.
     let maxWeight = 10000.
 
-    let minSymbol = 1
+    let minSymbol = 5
     let maxSymbol = 20
 
 module internal InspectorGadget =
@@ -35,23 +31,11 @@ module internal InspectorGadget =
     open Demands
 
     let patternForName = 
-        sprintf @"^(\w-){%d, %d}$" minSymbol maxSymbol
-    let patternLetters = @"^([a-zA-Z])+$"
-    let patternNumbers = @"^([0-9])+$"
-    let patternHyphen =  @"^-+$"
-    let patternUnderline = @"^_+$"
+       sprintf @"^([\w\-_]){%d,%d}$" minSymbol maxSymbol
 
     let checkEmpty     vehicle = 
         vehicle.name 
         |> String.length = 0
-
-    let checkLetters   vehicle = Regex.IsMatch(vehicle.name, patternLetters)
-
-    let checkNumbers   vehicle = Regex.IsMatch(vehicle.name, patternNumbers)
-
-    let checkHyphen    vehicle = Regex.IsMatch(vehicle.name, patternHyphen)
-
-    let checkUnderline vehicle = Regex.IsMatch(vehicle.name, patternUnderline)
 
     let checkAboveMax  vehicle = 
         vehicle.name 
@@ -80,20 +64,8 @@ module internal InspectorGadget =
                 if checkBellowMin vehicle then
                     names <- BelowTheMinimum(minSymbol) :: names
 
-                if checkLetters vehicle then 
-                    names <- Letters :: names
-
-                if checkNumbers vehicle then 
-                    names <- Numbers :: names
-
-                if checkHyphen vehicle then
-                    names <- Hyphen :: names
-
-                if checkUnderline vehicle then
-                    names <- Underline :: names
-
-                if (List.length names) = 0 then
-                    [Unknown]
+                if List.isEmpty names then
+                    [InvalidCharacter]
                     |> RequirementsForVehicle.Name
                     |> Some
                 else

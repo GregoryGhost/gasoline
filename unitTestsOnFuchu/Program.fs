@@ -8,4 +8,4 @@ open Fuchu.Tests
 let main argv =
     suite
     //|> filter (fun s -> s.StartsWith "Add vehicle to auto show")
-    |> runParallel
+    |> run

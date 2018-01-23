@@ -53,13 +53,12 @@ module Tests =
                     Assert.Equal("", expected, errors)
                 );
 
-                testCase "but already exists record" <| (fun _ ->
-                    let newV = validVehicle
-
+                testCase "replaced the record of the same record" <| (fun _ ->
+                    autoShow.ClearAllVehicle()
                     autoShow.AddVehicle(validVehicle) |> ignore
-                    let errors = autoShow.UpdateVehicle(validVehicle, newV)
-                    let expected = 
-                        [ExistsElem] |> List.toSeq
+
+                    let errors = autoShow.UpdateVehicle(validVehicle, validVehicle)
+                    let expected = Seq.empty
 
                     Assert.Equal("", expected, errors)
                 );
