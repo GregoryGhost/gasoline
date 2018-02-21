@@ -13,11 +13,16 @@ namespace TransportServiceConsole
         {
             var c = AutoShow.Instance;
             var vehicle = new Vehicle("mazda", 1000, 200.5, ModelService.Environment.Asphalt, 900);
+            var v2 = new Vehicle("mazda2", 124, 2225.5, ModelService.Environment.RuggedTerrain, 90);
+            var v3 = new Vehicle("mazda3", 124, 2225.5, ModelService.Environment.Asphalt, 90);
+
             c.AddVehicle(vehicle);
-            c.AddVehicle(vehicle);
+            c.AddVehicle(v2);
+            c.AddVehicle(v3);
             c.AddVehicle(vehicle);
             var path = System.IO.Directory.GetCurrentDirectory() + "\\" + "test.json";
             c.Save(path);
+            c.ClearAllVehicle();
             try
             {
                 c.Load(path);
@@ -37,6 +42,7 @@ namespace TransportServiceConsole
             {
                 Console.WriteLine(e.ToString());
                 Console.WriteLine("Расход топлива: {0}", Manager.CalcFuelConsumption(e));
+                Console.WriteLine();
             }
         }
     }
