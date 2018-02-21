@@ -58,6 +58,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Var.fs" />
     <Compile Include="TestListAddVehicle.fs" />
+    <Compile Include="CalcFuelConsumption.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
