@@ -57,6 +57,7 @@
     <Compile Include="JsonHelper.fs" />
     <Compile Include="InspectorGadget.fs" />
     <Compile Include="ModelService.fs" />
+    
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
