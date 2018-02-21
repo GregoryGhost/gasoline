@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportServiceWPF", "GasoLine\TransportServiceWPF.csproj", "{33CA99CE-C98C-43EB-B3EB-8CE76BFA2DB7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B8889DDB-AC55-44CF-91D9-D84F340019C3} = {B8889DDB-AC55-44CF-91D9-D84F340019C3}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportServiceConsole", "TransportServiceConsole\TransportServiceConsole.csproj", "{358EF089-7C64-49F6-9151-DDEB339998D8}"
 	ProjectSection(ProjectDependencies) = postProject

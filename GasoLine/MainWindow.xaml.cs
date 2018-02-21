@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,14 +26,19 @@ namespace GasoLine
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
-            var map = new List<List<int>>();
-            var l1 = new List<int> { 1, 2, 3, 4, 5 };
-            var l2 = new List<int> { 1, 2, 3, 4, 4 };
-            map.Add(l1);
-            map.Add(l2);
-            Map.ItemsSource = map;
+
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
