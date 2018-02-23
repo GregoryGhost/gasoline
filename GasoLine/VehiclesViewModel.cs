@@ -19,6 +19,33 @@ namespace GasoLine
         }
     }
 
+    /// <summary>
+    /// Временный костыль для замены record "Vehicle" из сборки на F#
+    /// </summary>
+    public class Vehicle
+    {
+        public Vehicle()
+            :this("",0,0,ModelService.Environment.Asphalt, 0)
+        {
+        }
+
+        public Vehicle(string name, int enginePower,
+             double weight, ModelService.Environment resistance, int tankCapacity)
+        {
+            this.name = name;
+            this.enginePower = enginePower;
+            this.weight = weight;
+            this.resistanceWithMedian = resistance;
+            this.tankCapacity = tankCapacity;
+        }
+
+        public string name { get; set; }
+        public int enginePower { get; set; }
+        public double weight { get; set; }
+        public ModelService.Environment resistanceWithMedian { get; set; }
+        public int tankCapacity { get; set; }
+    }
+
     public class VehicleViewModel : INotifyPropertyChanged, IEditableObject
     {
         private Vehicle _copyData;
@@ -42,19 +69,60 @@ namespace GasoLine
             {
                 if (_currentData.name != value)
                 {
-                    //_currentData.name = value;
-                    //NotifyPropertyChanged("Description");
+                    _currentData.name = value;
+                    NotifyPropertyChanged(nameof(this.Name));
                 }
             }
         }
 
-        public double EnginePower => _currentData.enginePower;
+        public int EnginePower
+        {
+            get { return _currentData.enginePower; }
+            set
+            {
+                _currentData.enginePower = value;
+                NotifyPropertyChanged(nameof(this.EnginePower));
+            }
+        }
 
-        public double Weight => _currentData.weight;
+        public double Weight
+        {
+            get
+            {
+                return _currentData.weight;
+            }
+            set
+            {
+                _currentData.weight = value;
+                NotifyPropertyChanged(nameof(this.Weight));
+            }
+        }
 
-        public ModelService.Environment Resistance => _currentData.resistanceWithMedian;
+        public ModelService.Environment Resistance
+        {
+            get
+            {
+                return _currentData.resistanceWithMedian;
+            }
+            set
+            {
+                _currentData.resistanceWithMedian = value;
+                NotifyPropertyChanged(nameof(this.Resistance));
+            }
+        }
 
-        public int TankCapacity => _currentData.tankCapacity;
+        public int TankCapacity
+        {
+            get
+            {
+                return _currentData.tankCapacity;
+            }
+            set
+            {
+                _currentData.tankCapacity = value;
+                NotifyPropertyChanged(nameof(this.TankCapacity));
+            }
+        }
 
         public override string ToString() => $"{Name}, {EnginePower:f}, {Weight:f}, {Resistance:G}, {TankCapacity:D}";
 
@@ -84,7 +152,7 @@ namespace GasoLine
 
         public void EndEdit()
         {
-            _copyData = new Vehicle("mazda", 1000, 200.5, ModelService.Environment.Asphalt, 900);
+            _copyData = new Vehicle();
         }
 
         #endregion
