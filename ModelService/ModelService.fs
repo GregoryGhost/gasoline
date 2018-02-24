@@ -9,7 +9,7 @@ open System.Runtime.CompilerServices
 module ExtensionEnvironment =
     [<Extension>]
     let ReadFromString (x : System.String) =
-            System.Enum.Parse(typeof<Environment>, x)
+            System.Enum.Parse(typeof<ModelService.Environment>, x)
             :?> ModelService.Environment
 
 type Manager =
