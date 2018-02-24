@@ -44,6 +44,7 @@ namespace GasoLine
                 {
                     _currentData.Name = value;
                     NotifyPropertyChanged(nameof(this.Name));
+                    NotifyPropertyChanged(nameof(this.FuelConsumption));
                 }
             }
         }
@@ -55,6 +56,7 @@ namespace GasoLine
             {
                 _currentData.EnginePower = value;
                 NotifyPropertyChanged(nameof(this.EnginePower));
+                NotifyPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -68,6 +70,7 @@ namespace GasoLine
             {
                 _currentData.Weight = value;
                 NotifyPropertyChanged(nameof(this.Weight));
+                NotifyPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -78,6 +81,7 @@ namespace GasoLine
             {
                 _currentData.Resistance = value.ReadFromString();
                 NotifyPropertyChanged(nameof(this.Resistance));
+                NotifyPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -94,6 +98,7 @@ namespace GasoLine
             {
                 _currentData.TankCapacity = value;
                 NotifyPropertyChanged(nameof(this.TankCapacity));
+                NotifyPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -107,6 +112,7 @@ namespace GasoLine
                     this.Resistance.ReadFromString(),
                     this.TankCapacity);
                 var result = Manager.CalcFuelConsumption(vehicle);
+                
                 return result;
             }
         }
