@@ -37,6 +37,8 @@
                           DisplayMemberBinding="{Binding Path=Resistance}"/>
                     <GridViewColumn Header="Tank capacity"
                           DisplayMemberBinding="{Binding Path=TankCapacity}"/>
+                    <GridViewColumn Header="Fuel consumption"
+                          DisplayMemberBinding="{Binding Path=FuelConsumption}"/>
                 </GridView>
             </ListView.View>
         </ListView>

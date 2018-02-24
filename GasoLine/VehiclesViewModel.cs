@@ -111,7 +111,7 @@ namespace GasoLine
             }
         }
 
-        public List<string> Resistances => 
+        public List<string> Resistances =>
             Enum.GetNames(typeof(ModelService.Environment)).ToList();
 
         public int TankCapacity
@@ -127,7 +127,21 @@ namespace GasoLine
             }
         }
 
-        public override string ToString() => $"{Name}, {EnginePower:f}, {Weight:f}, {Resistance:G}, {TankCapacity:D}";
+        public string FuelConsumption
+        {
+            get
+            {
+                var vehicle = new ModelService.Vehicle(this.Name,
+                    this.EnginePower,
+                    this.Weight,
+                    this.Resistance.ReadFromString(),
+                    this.TankCapacity);
+                var result = Manager.CalcFuelConsumption(vehicle);
+                return result;
+            }
+        }
+
+        public override string ToString() => $"{Name}, {EnginePower:f}, {Weight:f}, {Resistance:G}, {TankCapacity:D}, {FuelConsumption}";
 
         #region INotifyPropertyChanged Members
 
