@@ -25,7 +25,7 @@ namespace GasoLine
     public class Vehicle
     {
         public Vehicle()
-            :this("",0,0,ModelService.Environment.Asphalt, 0)
+            : this("", 0, 0, ModelService.Environment.Asphalt, 0)
         {
         }
 
@@ -98,18 +98,21 @@ namespace GasoLine
             }
         }
 
-        public ModelService.Environment Resistance
+        public string Resistance
         {
             get
             {
-                return _currentData.resistanceWithMedian;
+                return _currentData.resistanceWithMedian.ToString();
             }
             set
             {
-                _currentData.resistanceWithMedian = value;
+                _currentData.resistanceWithMedian = value.ReadFromString();
                 NotifyPropertyChanged(nameof(this.Resistance));
             }
         }
+
+        public List<string> Resistances => 
+            Enum.GetNames(typeof(ModelService.Environment)).ToList();
 
         public int TankCapacity
         {

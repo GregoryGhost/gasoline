@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GasoLine"
         mc:Ignorable="d"
         Title="ChangeItem" Height="300" Width="300">
     <StackPanel Margin="5" Width="280">
@@ -20,7 +19,6 @@
                                 <ContentPresenter ContentSource="Content" Margin="5,0,0,0" 
                                   DockPanel.Dock="Right" VerticalAlignment="Center"/>
                             </DockPanel>
-
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -43,7 +41,7 @@
             <TextBox Width="140" Text="{Binding Path=Weight, Mode=TwoWay}"/>
         </HeaderedContentControl>
         <HeaderedContentControl Header="Resistance with median:">
-            <ComboBox Width="140" ItemsSource="{Binding Path=Resistance, Mode=TwoWay}"/>
+            <ComboBox Width="140" ItemsSource="{Binding Resistances}" SelectedItem="{Binding Path=Resistance, Mode=TwoWay}" />
         </HeaderedContentControl>
         <HeaderedContentControl Header="Tank capacity:">
             <TextBox Width="140" Text="{Binding Path=TankCapacity, Mode=TwoWay}"/>
