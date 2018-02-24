@@ -2,6 +2,15 @@
 
 open Demands
 open System
+open System.Runtime.CompilerServices
+
+
+[<Extension>]
+module ExtensionEnvironment =
+    [<Extension>]
+    let ReadFromString (x : System.String) =
+            System.Enum.Parse(typeof<Environment>, x)
+            :?> ModelService.Environment
 
 type Manager =
     /// <summary>
