@@ -50,7 +50,7 @@ module internal InspectorGadget =
 
         if isOk then 
             None
-        else               
+        else        
             if checkEmpty vehicle then
                 [Empty]
                 |> RequirementsForVehicle.Name
