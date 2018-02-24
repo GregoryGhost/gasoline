@@ -46,3 +46,31 @@ with
                           - (this.enginePower |> float)
                calc
            | _ -> 0.0
+
+/// <summary>
+/// Модель транспортного средства
+/// </summary>
+type VehicleModel(name, enginePower, weight, resistance, tankCapacity) =
+    let mutable name = name
+    let mutable enginePower = enginePower
+    let mutable weight = weight
+    let mutable resistance = resistance
+    let mutable tankCapacity = tankCapacity
+
+    new() = VehicleModel("mazda-rx8", 270, 670.0, Environment.Asphalt, 200)
+
+    member this.Name 
+        with get() = name 
+        and set(value) = name <- value
+    member this.EnginePower 
+        with get() = enginePower
+        and set(value) = enginePower <- value
+    member this.Weight
+        with get() = weight
+        and set(value) = weight <- value
+    member this.Resistance 
+        with get() = resistance
+        and set(value) = resistance <- value
+    member this.TankCapacity
+        with get() = tankCapacity
+        and set(value) = tankCapacity <- value

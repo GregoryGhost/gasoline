@@ -19,37 +19,10 @@ namespace GasoLine
         }
     }
 
-    /// <summary>
-    /// Временный костыль для замены record "Vehicle" из сборки на F#
-    /// </summary>
-    public class Vehicle
-    {
-        public Vehicle()
-            : this("", 0, 0, ModelService.Environment.Asphalt, 0)
-        {
-        }
-
-        public Vehicle(string name, int enginePower,
-             double weight, ModelService.Environment resistance, int tankCapacity)
-        {
-            this.name = name;
-            this.enginePower = enginePower;
-            this.weight = weight;
-            this.resistanceWithMedian = resistance;
-            this.tankCapacity = tankCapacity;
-        }
-
-        public string name { get; set; }
-        public int enginePower { get; set; }
-        public double weight { get; set; }
-        public ModelService.Environment resistanceWithMedian { get; set; }
-        public int tankCapacity { get; set; }
-    }
-
     public class VehicleViewModel : INotifyPropertyChanged, IEditableObject
     {
-        private Vehicle _copyData;
-        private Vehicle _currentData;
+        private VehicleModel _copyData;
+        private VehicleModel _currentData;
 
         public VehicleViewModel()
             : this("mazda_rx-8", 192, 1429.0, ModelService.Environment.Asphalt, 65)
@@ -59,17 +32,17 @@ namespace GasoLine
         public VehicleViewModel(string name, int enginePower,
             double weight, ModelService.Environment resistance, int tankCapacity)
         {
-            _currentData = new Vehicle(name, enginePower, weight, resistance, tankCapacity);
+            _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
         }
 
         public string Name
         {
-            get { return _currentData.name; }
+            get { return _currentData.Name; }
             set
             {
-                if (_currentData.name != value)
+                if (_currentData.Name != value)
                 {
-                    _currentData.name = value;
+                    _currentData.Name = value;
                     NotifyPropertyChanged(nameof(this.Name));
                 }
             }
@@ -77,10 +50,10 @@ namespace GasoLine
 
         public int EnginePower
         {
-            get { return _currentData.enginePower; }
+            get { return _currentData.EnginePower; }
             set
             {
-                _currentData.enginePower = value;
+                _currentData.EnginePower = value;
                 NotifyPropertyChanged(nameof(this.EnginePower));
             }
         }
@@ -89,24 +62,21 @@ namespace GasoLine
         {
             get
             {
-                return _currentData.weight;
+                return _currentData.Weight;
             }
             set
             {
-                _currentData.weight = value;
+                _currentData.Weight = value;
                 NotifyPropertyChanged(nameof(this.Weight));
             }
         }
 
         public string Resistance
         {
-            get
-            {
-                return _currentData.resistanceWithMedian.ToString();
-            }
+            get => _currentData.Resistance.ToString();
             set
             {
-                _currentData.resistanceWithMedian = value.ReadFromString();
+                _currentData.Resistance = value.ReadFromString();
                 NotifyPropertyChanged(nameof(this.Resistance));
             }
         }
@@ -118,11 +88,11 @@ namespace GasoLine
         {
             get
             {
-                return _currentData.tankCapacity;
+                return _currentData.TankCapacity;
             }
             set
             {
-                _currentData.tankCapacity = value;
+                _currentData.TankCapacity = value;
                 NotifyPropertyChanged(nameof(this.TankCapacity));
             }
         }
@@ -169,7 +139,7 @@ namespace GasoLine
 
         public void EndEdit()
         {
-            _copyData = new Vehicle();
+            _copyData = new VehicleModel();
         }
 
         #endregion
