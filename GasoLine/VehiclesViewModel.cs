@@ -23,7 +23,7 @@ namespace GasoLine
     {
         private VehicleModel _copyData;
         private VehicleModel _currentData;
-        private Dictionary<string, Func<string, string>> _methodsCheck;
+        private Dictionary<string, Func<VehicleModel, string>> _methodsCheck;
         private Gibdd _gibdd;
 
         public VehicleViewModel()
@@ -35,9 +35,9 @@ namespace GasoLine
             double weight, ModelService.Environment resistance, int tankCapacity)
         {
             _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
-            _methodsCheck = new Dictionary<string, Func<string, string>>();
+            _methodsCheck = new Dictionary<string, Func<VehicleModel, string>>();
             _gibdd = new Gibdd();
-            _methodsCheck.Add(nameof(this.Name), new Func<string, string>((string value) =>_gibdd.CheckName(value)));
+            _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) =>_gibdd.CheckName(value)));
         }
 
         public string Name
@@ -130,12 +130,9 @@ namespace GasoLine
             {
                 var result = String.Empty;
 
-                if (nameof(this.Name) == columnName)
+                if (_methodsCheck.ContainsKey(columnName))
                 {
-                    if (_methodsCheck.ContainsKey(columnName))
-                    {
-                        result = _methodsCheck[nameof(this.Name)](this.Name);
-                    }
+                    result = _methodsCheck[columnName](_currentData);
                 }
 
                 return result;

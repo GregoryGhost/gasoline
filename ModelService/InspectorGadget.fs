@@ -143,25 +143,22 @@ type Gibdd() =
                     resistanceWithMedian = Environment.Asphalt;
                     tankCapacity = 4497}
 
-    let toString y =
-        let y' acc x =
-            let y'' =
-                match x with
-                | Demands.Parameter.Empty -> "Заполните поле"
-                | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
-                | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
-                | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
-            acc + y''
-        List.fold y' "" y
+    let checkParameter x =
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
 
-    let concat x =
-        match x with 
-        | name -> x |> toString |> Some
+    let concat x = 
+         x 
+         |> List.fold (fun acc x -> acc + (checkParameter x)) ""
+         |> Some
 
     let choiceRequire x =
         match x with
         | Name y -> y |> concat
-        | Weight y -> Some "Weight Test"
+        | Weight y -> y |> checkParameter |> Some
         | EnginePower y -> Some "Engine Power Test"
         | TankCapacity y -> Some "Tank Capacity Test"
         | _ -> Some "Unknown Error 1111"
@@ -171,7 +168,7 @@ type Gibdd() =
         | Some x -> x
         | None -> System.String.Empty
 
-    let check value =                         
+    let check value =                  
         value
         |> checkName 
         |> Option.bind choiceRequire
@@ -183,13 +180,13 @@ type Gibdd() =
     /// <param name="name">Название транспортного средства</param>
     /// <returns>Возвращает текст, содержащий в себе каким 
     ///  требованиям должно удовлетворять название транспортного средства</returns>
-    member this.CheckName(name : string) : string =
-        let test = {vehicle with name = name}
-        check test
+    member this.CheckName(model : VehicleModel) : string =
+        {vehicle with name = model.Name}
+        |> check
 
     member this.CheckEnginePower(enginePower : int) =
         {vehicle with enginePower = enginePower }
-        |> InspectorGadget.checkEnginePower
+        |> check
     
     member this.CheckWeight(weight : double) =
         {vehicle with weight = weight }
