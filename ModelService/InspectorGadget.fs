@@ -15,8 +15,8 @@ module Demands =
         | ExistsElem
         
     let minEnginePower = 0
-    let maxEnginePower = int (10.**9.)
-
+    let maxEnginePower = int (10.**8.)
+    
     let minTankCapacity = 0
     let maxTankCapacity = 10000
     
@@ -159,20 +159,14 @@ type Gibdd() =
         match x with
         | Name y -> y |> concat
         | Weight y -> y |> checkParameter |> Some
-        | EnginePower y -> Some "Engine Power Test"
+        | EnginePower y -> y |> checkParameter |> Some
         | TankCapacity y -> Some "Tank Capacity Test"
         | _ -> Some "Unknown Error 1111"
 
     let unpackValue value = 
         match value with
         | Some x -> x
-        | None -> System.String.Empty
-
-    let check value =                  
-        value
-        |> checkName 
-        |> Option.bind choiceRequire
-        |> unpackValue
+        | None -> System.String.Empty 
     
     /// <summary>
     /// Проверяет название транспортного средства на соответствие заданным требованиям
@@ -182,11 +176,15 @@ type Gibdd() =
     ///  требованиям должно удовлетворять название транспортного средства</returns>
     member this.CheckName(model : VehicleModel) : string =
         {vehicle with name = model.Name}
-        |> check
+        |> checkName 
+        |> Option.bind choiceRequire
+        |> unpackValue
 
-    member this.CheckEnginePower(enginePower : int) =
-        {vehicle with enginePower = enginePower }
-        |> check
+    member this.CheckEnginePower(model: VehicleModel) =
+        {vehicle with enginePower = model.EnginePower }
+        |> checkEnginePower
+        |> Option.bind choiceRequire
+        |> unpackValue
     
     member this.CheckWeight(weight : double) =
         {vehicle with weight = weight }
