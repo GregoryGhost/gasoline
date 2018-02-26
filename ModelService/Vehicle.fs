@@ -74,3 +74,9 @@ type VehicleModel(name, enginePower, weight, resistance, tankCapacity) =
     member this.TankCapacity
         with get() = tankCapacity
         and set(value) = tankCapacity <- value
+    member this.Clone() =
+        new VehicleModel(this.Name
+                         ,this.EnginePower
+                         ,this.Weight
+                         ,this.Resistance
+                         ,this.TankCapacity)

@@ -27,6 +27,11 @@ namespace GasoLine
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
+            if ((this.DataContext as VehicleViewModel).IsValid == false)
+            {
+                MessageBox.Show("Исправьте поля записи!");
+                return;
+            }
             DialogResult = true;
             Close();
         }

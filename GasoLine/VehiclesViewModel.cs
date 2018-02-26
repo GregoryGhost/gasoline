@@ -127,6 +127,8 @@ namespace GasoLine
 
         string IDataErrorInfo.Error => null;
 
+        public bool IsValid { get; private set; }
+
         string IDataErrorInfo.this[string columnName]
         {
             get
@@ -136,11 +138,18 @@ namespace GasoLine
                 if (_methodsCheck.ContainsKey(columnName))
                 {
                     result = _methodsCheck[columnName](_currentData);
+                    IsValid = false;
+                }
+                else
+                {
+                    IsValid = true;
                 }
 
                 return result;
             }
         }
+
+
 
         public override string ToString() => $"{Name}, {EnginePower:f}, {Weight:f}, {Resistance:G}, {TankCapacity:D}, {FuelConsumption}";
 
@@ -159,7 +168,7 @@ namespace GasoLine
 
         public void BeginEdit()
         {
-            _copyData = _currentData;
+            _copyData = _currentData.Clone();
         }
 
         public void CancelEdit()
