@@ -165,7 +165,7 @@ type Gibdd() =
     let choiceRequire x =
         match x with
         | Name y -> y |> concat
-        | Weight y -> y |> convertNameToString |> Some
+        | Weight y -> y |> convertParameterToString |> Some
         | EnginePower y -> y |> convertParameterToString |> Some
         | TankCapacity y -> Some "Tank Capacity Test"
         | _ -> Some "Unknown Error 1111"
@@ -193,9 +193,11 @@ type Gibdd() =
         |> Option.bind choiceRequire
         |> unpackValue
     
-    member this.CheckWeight(weight : double) =
-        {vehicle with weight = weight }
-        |> InspectorGadget.checkWeight
+    member this.CheckWeight(model: VehicleModel) =
+        {vehicle with weight = model.Weight }
+        |> checkWeight
+        |> Option.bind choiceRequire
+        |> unpackValue
     
     member this.CheckTankCapacity(tankCapacity : int) =
         {vehicle with tankCapacity = tankCapacity }

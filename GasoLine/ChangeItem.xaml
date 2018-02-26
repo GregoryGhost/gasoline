@@ -71,7 +71,17 @@
             </TextBox>
         </HeaderedContentControl>
         <HeaderedContentControl Header="Weight:">
-            <TextBox Width="140" Text="{Binding Path=Weight, Mode=TwoWay}"/>
+            <TextBox Width="140" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="Weight"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </HeaderedContentControl>
         <HeaderedContentControl Header="Resistance with median:">
             <ComboBox Width="140" ItemsSource="{Binding Resistances}" SelectedItem="{Binding Path=Resistance, Mode=TwoWay}" />

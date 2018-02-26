@@ -39,6 +39,7 @@ namespace GasoLine
             _gibdd = new Gibdd();
             _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) =>_gibdd.CheckName(value)));
             _methodsCheck.Add(nameof(this.EnginePower), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckEnginePower(value)));
+            _methodsCheck.Add(nameof(this.Weight), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckWeight(value)));
         }
 
         public string Name
