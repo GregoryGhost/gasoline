@@ -38,6 +38,7 @@ namespace GasoLine
             _methodsCheck = new Dictionary<string, Func<VehicleModel, string>>();
             _gibdd = new Gibdd();
             _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) =>_gibdd.CheckName(value)));
+            _methodsCheck.Add(nameof(this.EnginePower), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckEnginePower(value)));
         }
 
         public string Name

@@ -143,7 +143,7 @@ type Gibdd() =
                     resistanceWithMedian = Environment.Asphalt;
                     tankCapacity = 4497}
 
-    let checkParameter x =
+    let convertNameToString x =
         match x with
         | Demands.Parameter.Empty -> "Заполните поле"
         | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
@@ -152,14 +152,21 @@ type Gibdd() =
 
     let concat x = 
          x 
-         |> List.fold (fun acc x -> acc + (checkParameter x)) ""
+         |> List.fold (fun acc x -> acc + (convertNameToString x)) ""
          |> Some
+
+    let convertParameterToString x =
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> "Превышено максимально-допустимое значение, равное " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> "Значение меньше минимально-допустимого значения, равного " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - числа"
 
     let choiceRequire x =
         match x with
         | Name y -> y |> concat
-        | Weight y -> y |> checkParameter |> Some
-        | EnginePower y -> y |> checkParameter |> Some
+        | Weight y -> y |> convertNameToString |> Some
+        | EnginePower y -> y |> convertParameterToString |> Some
         | TankCapacity y -> Some "Tank Capacity Test"
         | _ -> Some "Unknown Error 1111"
 

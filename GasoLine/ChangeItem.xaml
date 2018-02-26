@@ -51,16 +51,24 @@
                          ValidatesOnExceptions="True"
                          UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
-                          <DataErrorValidationRule/>
+                            <DataErrorValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <!--Source="{StaticResource Data}"-->
-            <!--<TextBox Width="140" Text="{Binding Path=Name, Mode=TwoWay}" Style="{StaticResource TextBoxInError}"/>-->
         </HeaderedContentControl>
         <HeaderedContentControl Header="Engine Power:">
-            <TextBox Width="140" Text="{Binding Path=EnginePower, Mode=TwoWay}"/>
+            <TextBox Width="140" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="EnginePower"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </HeaderedContentControl>
         <HeaderedContentControl Header="Weight:">
             <TextBox Width="140" Text="{Binding Path=Weight, Mode=TwoWay}"/>
