@@ -19,10 +19,12 @@ namespace GasoLine
         }
     }
 
-    public class VehicleViewModel : INotifyPropertyChanged, IEditableObject
+    public class VehicleViewModel : INotifyPropertyChanged, IEditableObject, IDataErrorInfo
     {
         private VehicleModel _copyData;
         private VehicleModel _currentData;
+        private Dictionary<string, Func<string, string>> _methodsCheck;
+        private Gibdd _gibdd;
 
         public VehicleViewModel()
             : this("mazda_rx-8", 192, 1429.0, ModelService.Environment.Asphalt, 65)
@@ -33,6 +35,9 @@ namespace GasoLine
             double weight, ModelService.Environment resistance, int tankCapacity)
         {
             _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
+            _methodsCheck = new Dictionary<string, Func<string, string>>();
+            _gibdd = new Gibdd();
+            _methodsCheck.Add(nameof(this.Name), new Func<string, string>((string value) =>_gibdd.CheckName(value)));
         }
 
         public string Name
@@ -43,8 +48,8 @@ namespace GasoLine
                 if (_currentData.Name != value)
                 {
                     _currentData.Name = value;
-                    NotifyPropertyChanged(nameof(this.Name));
-                    NotifyPropertyChanged(nameof(this.FuelConsumption));
+                    OnPropertyChanged(nameof(this.Name));
+                    OnPropertyChanged(nameof(this.FuelConsumption));
                 }
             }
         }
@@ -55,8 +60,8 @@ namespace GasoLine
             set
             {
                 _currentData.EnginePower = value;
-                NotifyPropertyChanged(nameof(this.EnginePower));
-                NotifyPropertyChanged(nameof(this.FuelConsumption));
+                OnPropertyChanged(nameof(this.EnginePower));
+                OnPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -69,8 +74,8 @@ namespace GasoLine
             set
             {
                 _currentData.Weight = value;
-                NotifyPropertyChanged(nameof(this.Weight));
-                NotifyPropertyChanged(nameof(this.FuelConsumption));
+                OnPropertyChanged(nameof(this.Weight));
+                OnPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -80,8 +85,8 @@ namespace GasoLine
             set
             {
                 _currentData.Resistance = value.ReadFromString();
-                NotifyPropertyChanged(nameof(this.Resistance));
-                NotifyPropertyChanged(nameof(this.FuelConsumption));
+                OnPropertyChanged(nameof(this.Resistance));
+                OnPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -97,8 +102,8 @@ namespace GasoLine
             set
             {
                 _currentData.TankCapacity = value;
-                NotifyPropertyChanged(nameof(this.TankCapacity));
-                NotifyPropertyChanged(nameof(this.FuelConsumption));
+                OnPropertyChanged(nameof(this.TankCapacity));
+                OnPropertyChanged(nameof(this.FuelConsumption));
             }
         }
 
@@ -112,7 +117,27 @@ namespace GasoLine
                     this.Resistance.ReadFromString(),
                     this.TankCapacity);
                 var result = Manager.CalcFuelConsumption(vehicle);
-                
+
+                return result;
+            }
+        }
+
+        string IDataErrorInfo.Error => null;
+
+        string IDataErrorInfo.this[string columnName]
+        {
+            get
+            {
+                var result = String.Empty;
+
+                if (nameof(this.Name) == columnName)
+                {
+                    if (_methodsCheck.ContainsKey(columnName))
+                    {
+                        result = _methodsCheck[nameof(this.Name)](this.Name);
+                    }
+                }
+
                 return result;
             }
         }
@@ -123,9 +148,9 @@ namespace GasoLine
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged(string info)
+        public void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName]string prop = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         #endregion
@@ -140,7 +165,7 @@ namespace GasoLine
         public void CancelEdit()
         {
             _currentData = _copyData;
-            NotifyPropertyChanged("");
+            OnPropertyChanged("");
         }
 
         public void EndEdit()

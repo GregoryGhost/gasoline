@@ -1,5 +1,6 @@
 ﻿namespace ModelService
 
+
 module Demands =
     type Parameter =
         | Empty
@@ -25,10 +26,10 @@ module Demands =
     let minSymbol = 5
     let maxSymbol = 20
 
+open Demands
+
 module internal InspectorGadget =
     open System.Text.RegularExpressions
-    open System.Globalization
-    open Demands
 
     let patternForName = 
        sprintf @"^([\w\-_]){%d,%d}$" minSymbol maxSymbol
@@ -129,3 +130,68 @@ module internal InspectorGadget =
                         | None   -> false) 
         |> List.map (Option.get)
         |> List.toSeq
+
+open InspectorGadget
+
+type Gibdd() =
+    let vehicle = { name = "Ferrari 458 Special";
+                    enginePower = 605;
+                    weight = 1480.0; 
+                    resistanceWithMedian = Environment.Asphalt;
+                    tankCapacity = 4497}
+
+    let toString y =
+        let y' acc x =
+            let y'' =
+                match x with
+                | Demands.Parameter.Empty -> "Заполните поле"
+                | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
+                | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
+                | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
+            acc + y''
+        List.fold y' "" y
+
+    let concat x =
+        match x with 
+        | name -> x |> toString |> Some
+
+    let choiceRequire x =
+        match x with
+        | Name y -> y |> concat
+        | Weight y -> Some "Weight Test"
+        | EnginePower y -> Some "Engine Power Test"
+        | TankCapacity y -> Some "Tank Capacity Test"
+        | _ -> Some "Unknown Error 1111"
+
+    let unpackValue value = 
+        match value with
+        | Some x -> x
+        | None -> System.String.Empty
+
+    let check value =                         
+        value
+        |> checkName 
+        |> Option.bind choiceRequire
+        |> unpackValue
+    
+    /// <summary>
+    /// Проверяет название транспортного средства на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Название транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///  требованиям должно удовлетворять название транспортного средства</returns>
+    member this.CheckName(name : string) : string =
+        let test = {vehicle with name = name}
+        check test
+
+    member this.CheckEnginePower(enginePower : int) =
+        {vehicle with enginePower = enginePower }
+        |> InspectorGadget.checkEnginePower
+    
+    member this.CheckWeight(weight : double) =
+        {vehicle with weight = weight }
+        |> InspectorGadget.checkWeight
+    
+    member this.CheckTankCapacity(tankCapacity : int) =
+        {vehicle with tankCapacity = tankCapacity }
+        |> InspectorGadget.checkTankCapacity

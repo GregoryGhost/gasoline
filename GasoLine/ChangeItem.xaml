@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GasoLine"
         mc:Ignorable="d"
         Title="ChangeItem" Height="300" Width="300">
     <StackPanel Margin="5" Width="280">
@@ -29,10 +30,34 @@
                 <Setter Property="Margin" Value="10,15,15,15"/>
 
             </Style>
+
+            <local:VehicleViewModel x:Key="Data"/>
+            
+            <Style x:Key="TextBoxInError" TargetType="TextBox">
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </StackPanel.Resources>
 
         <HeaderedContentControl Header="Name:">
-            <TextBox Width="140" Text="{Binding Path=Name, Mode=TwoWay}"/>
+            <TextBox Width="140" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="Name"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                          <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <!--Source="{StaticResource Data}"-->
+            <!--<TextBox Width="140" Text="{Binding Path=Name, Mode=TwoWay}" Style="{StaticResource TextBoxInError}"/>-->
         </HeaderedContentControl>
         <HeaderedContentControl Header="Engine Power:">
             <TextBox Width="140" Text="{Binding Path=EnginePower, Mode=TwoWay}"/>
