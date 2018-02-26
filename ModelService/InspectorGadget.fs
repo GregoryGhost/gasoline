@@ -167,7 +167,7 @@ type Gibdd() =
         | Name y -> y |> concat
         | Weight y -> y |> convertParameterToString |> Some
         | EnginePower y -> y |> convertParameterToString |> Some
-        | TankCapacity y -> Some "Tank Capacity Test"
+        | TankCapacity y -> y |> convertParameterToString |> Some
         | _ -> Some "Unknown Error 1111"
 
     let unpackValue value = 
@@ -199,6 +199,8 @@ type Gibdd() =
         |> Option.bind choiceRequire
         |> unpackValue
     
-    member this.CheckTankCapacity(tankCapacity : int) =
-        {vehicle with tankCapacity = tankCapacity }
-        |> InspectorGadget.checkTankCapacity
+    member this.CheckTankCapacity(model: VehicleModel) =
+        {vehicle with tankCapacity = model.TankCapacity }
+        |> checkTankCapacity
+        |> Option.bind choiceRequire
+        |> unpackValue

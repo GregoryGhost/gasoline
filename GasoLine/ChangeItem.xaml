@@ -87,7 +87,17 @@
             <ComboBox Width="140" ItemsSource="{Binding Resistances}" SelectedItem="{Binding Path=Resistance, Mode=TwoWay}" />
         </HeaderedContentControl>
         <HeaderedContentControl Header="Tank capacity:">
-            <TextBox Width="140" Text="{Binding Path=TankCapacity, Mode=TwoWay}"/>
+            <TextBox Width="140" Style="{StaticResource TextBoxInError}">
+                <TextBox.Text>
+                    <Binding Path="TankCapacity"  Mode="TwoWay"
+                         ValidatesOnExceptions="True"
+                         UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </HeaderedContentControl>
         <StackPanel Orientation="Horizontal">
             <Button IsDefault="True" Click="Submit_Click">_Submit</Button>
