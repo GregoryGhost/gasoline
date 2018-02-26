@@ -133,6 +133,9 @@ module internal InspectorGadget =
 
 open InspectorGadget
 
+/// <summary>
+/// Проверяет запись VehicleModel на соответствие требованиям
+/// </summary>
 type Gibdd() =
     let vehicle = { name = "Ferrari 458 Special";
                     enginePower = 605;
