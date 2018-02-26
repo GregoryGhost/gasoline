@@ -137,7 +137,7 @@ open InspectorGadget
 /// Проверяет запись VehicleModel на соответствие требованиям
 /// </summary>
 type Gibdd() =
-    let vehicle = { name = "Ferrari 458 Special";
+    let vehicle = { name = "Ferrari_458_Special";
                     enginePower = 605;
                     weight = 1480.0; 
                     resistanceWithMedian = Environment.Asphalt;
