@@ -105,15 +105,18 @@ namespace GasoLine
             }
             else
             {
-                var path = "test.json";
-                if (t.Save(path))
+                if (_path == string.Empty)
                 {
-                    MessageBox.Show($"Записи были успешно записаны в файл {path}", "Сохранение",
+                    _path = _defaultPath;
+                }
+                if (t.Save(_path))
+                {
+                    MessageBox.Show($"Записи были успешно записаны в файл {_path}", "Сохранение",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"Записи БД не были сохранены в файл {path}. " +
+                    MessageBox.Show($"Записи БД не были сохранены в файл {_path}. " +
                         $"Записи содержать неверные данные.", "Ошибка записи",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -131,18 +134,45 @@ namespace GasoLine
             }
             else
             {
-                var path = "test.json";
-                if (t.Open(path))
+                
+                if(_path == string.Empty)
                 {
-                    MessageBox.Show($"Записи были успешно загружены из файла {path}", "Загрузка",
+                    _path = _defaultPath;
+                }
+                if (t.Open(_path))
+                {
+                    MessageBox.Show($"Записи были успешно загружены из файла {_path}", "Загрузка",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"Записи БД не были загружены из файла {path}. " +
+                    MessageBox.Show($"Записи БД не были загружены из файла {_path}. " +
                         $"Записи содержать неверные данные.", "Ошибка загрузки",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        string _path = string.Empty;
+        readonly string _defaultPath = "test.json";
+
+        private void New_Click(object sender, RoutedEventArgs e)
+        {
+            var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            t.Clear();
+
+            var dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = "Document",
+                DefaultExt = ".json",
+                Filter = "Text documents (.json)|*.json"
+            };
+
+            var result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                _path = dlg.FileName;
             }
         }
     }
