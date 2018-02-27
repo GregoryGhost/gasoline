@@ -127,6 +127,7 @@ namespace GasoLine
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            t.Clear();
             if (t == null)
             {
                 MessageBox.Show("Ошибка подключения к БД", "Ошибка открытия",
@@ -134,8 +135,21 @@ namespace GasoLine
             }
             else
             {
-                
-                if(_path == string.Empty)
+                var dlg = new Microsoft.Win32.OpenFileDialog
+                {
+                    FileName = "Document",
+                    DefaultExt = ".json",
+                    Filter = "Text documents (.json)|*.json"
+                };
+
+                var result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    _path = dlg.FileName;
+                }
+
+                if (_path == string.Empty)
                 {
                     _path = _defaultPath;
                 }
