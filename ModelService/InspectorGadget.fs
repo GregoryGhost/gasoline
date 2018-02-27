@@ -1,5 +1,6 @@
 ﻿namespace ModelService
 
+
 module Demands =
     type Parameter =
         | Empty
@@ -14,8 +15,8 @@ module Demands =
         | ExistsElem
         
     let minEnginePower = 0
-    let maxEnginePower = int (10.**9.)
-
+    let maxEnginePower = int (10.**8.)
+    
     let minTankCapacity = 0
     let maxTankCapacity = 10000
     
@@ -25,10 +26,10 @@ module Demands =
     let minSymbol = 5
     let maxSymbol = 20
 
+open Demands
+
 module internal InspectorGadget =
     open System.Text.RegularExpressions
-    open System.Globalization
-    open Demands
 
     let patternForName = 
        sprintf @"^([\w\-_]){%d,%d}$" minSymbol maxSymbol
@@ -50,7 +51,7 @@ module internal InspectorGadget =
 
         if isOk then 
             None
-        else               
+        else        
             if checkEmpty vehicle then
                 [Empty]
                 |> RequirementsForVehicle.Name
@@ -129,3 +130,77 @@ module internal InspectorGadget =
                         | None   -> false) 
         |> List.map (Option.get)
         |> List.toSeq
+
+open InspectorGadget
+
+/// <summary>
+/// Проверяет запись VehicleModel на соответствие требованиям
+/// </summary>
+type Gibdd() =
+    let vehicle = { name = "Ferrari_458_Special";
+                    enginePower = 605;
+                    weight = 1480.0; 
+                    resistanceWithMedian = Environment.Asphalt;
+                    tankCapacity = 4497}
+
+    let convertNameToString x =
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
+
+    let concat x = 
+         x 
+         |> List.fold (fun acc x -> acc + (convertNameToString x)) ""
+         |> Some
+
+    let convertParameterToString x =
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> "Превышено максимально-допустимое значение, равное " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> "Значение меньше минимально-допустимого значения, равного " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - числа"
+
+    let choiceRequire x =
+        match x with
+        | Name y -> y |> concat
+        | Weight y -> y |> convertParameterToString |> Some
+        | EnginePower y -> y |> convertParameterToString |> Some
+        | TankCapacity y -> y |> convertParameterToString |> Some
+        | _ -> Some "Unknown Error 1111"
+
+    let unpackValue value = 
+        match value with
+        | Some x -> x
+        | None -> System.String.Empty 
+    
+    /// <summary>
+    /// Проверяет название транспортного средства на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Название транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///  требованиям должно удовлетворять название транспортного средства</returns>
+    member this.CheckName(model : VehicleModel) : string =
+        {vehicle with name = model.Name}
+        |> checkName 
+        |> Option.bind choiceRequire
+        |> unpackValue
+
+    member this.CheckEnginePower(model: VehicleModel) =
+        {vehicle with enginePower = model.EnginePower }
+        |> checkEnginePower
+        |> Option.bind choiceRequire
+        |> unpackValue
+    
+    member this.CheckWeight(model: VehicleModel) =
+        {vehicle with weight = model.Weight }
+        |> checkWeight
+        |> Option.bind choiceRequire
+        |> unpackValue
+    
+    member this.CheckTankCapacity(model: VehicleModel) =
+        {vehicle with tankCapacity = model.TankCapacity }
+        |> checkTankCapacity
+        |> Option.bind choiceRequire
+        |> unpackValue

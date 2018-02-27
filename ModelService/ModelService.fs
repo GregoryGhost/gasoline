@@ -2,7 +2,19 @@
 
 open Demands
 open System
+open System.Runtime.CompilerServices
 
+
+[<Extension>]
+module ExtensionEnvironment =
+    [<Extension>]
+    let ReadFromString (x : System.String) =
+            System.Enum.Parse(typeof<ModelService.Environment>, x)
+            :?> ModelService.Environment
+
+/// <summary>
+/// Считает расход средств на транспортное средство
+/// </summary>
 type Manager =
     /// <summary>
     /// Считает расход топлива для транспортного средства
@@ -15,6 +27,9 @@ type Manager =
             else
                 Environment.NANI.ToString()
 
+/// <summary>
+/// Аля база данных для типа Vehicle
+/// </summary>
 type AutoShow private () =
     let mutable vehicles : Vehicle list = []
 
