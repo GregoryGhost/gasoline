@@ -98,10 +98,11 @@ namespace GasoLine
         private void SaveItems_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
-            if (t == null)
+            if(t == null)
             {
                 MessageBox.Show("Ошибка подключения к БД", "Ошибка записи",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+                _saveData = false;
             }
             else
             {
@@ -113,25 +114,49 @@ namespace GasoLine
                 {
                     MessageBox.Show($"Записи были успешно записаны в файл {_path}", "Сохранение",
                         MessageBoxButton.OK, MessageBoxImage.Information);
+                    _saveData = true;
                 }
                 else
                 {
+                    _saveData = false;
                     MessageBox.Show($"Записи БД не были сохранены в файл {_path}. " +
                         $"Записи содержать неверные данные.", "Ошибка записи",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
+            
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
+
+            if (_saveData == false)
+            {
+                var r = MessageBox.Show("Данные не были сохранены.\n" +
+                    "Сохранить ?",
+                    "Открытие нового файла",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                switch (r)
+                {
+                    case MessageBoxResult.Yes:
+                        SaveItems_Click(sender, e);
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+
             t.Clear();
+
             if (t == null)
             {
                 MessageBox.Show("Ошибка подключения к БД", "Ошибка открытия",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+                _saveData = false;
             }
             else
             {
@@ -169,14 +194,35 @@ namespace GasoLine
 
         string _path = string.Empty;
         readonly string _defaultPath = "test.json";
-
+        bool _saveData = false;
         private void New_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            
+            if(_saveData == false)
+            {
+                var r = MessageBox.Show("Данные не были сохранены.\n" +
+                    "Сохранить ?",
+                    "Создание нового файла",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+                switch (r)
+                {
+                    case MessageBoxResult.Yes:
+                        SaveItems_Click(sender, e);
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+
             t.Clear();
 
             var dlg = new Microsoft.Win32.SaveFileDialog
             {
+                Title = "Создать новый файл",
                 FileName = "Document",
                 DefaultExt = ".json",
                 Filter = "Text documents (.json)|*.json"
@@ -211,14 +257,15 @@ namespace GasoLine
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Вы уверены что хотите выйти? " +
-                "Есть несохраненные данные, сохранить их?", "Закрытие программы",
+            var result = MessageBox.Show("Вы уверены что хотите выйти?\n" +
+                "Есть несохраненные данные, сохранить их?",
+                "Закрытие программы", 
                 MessageBoxButton.YesNoCancel);
 
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    if (_path == string.Empty)
+                    if(_path == string.Empty)
                     {
                         SaveAs_Click(sender, e);
                     }
@@ -247,7 +294,6 @@ namespace GasoLine
                 $"Репозиторий проекта: {link}\n" +
                 $"Перейти на страницу проекта?",
                 "О программе", MessageBoxButton.OKCancel, MessageBoxImage.Question);
-
             if (result == MessageBoxResult.OK)
             {
                 System.Diagnostics.Process.Start(link);
