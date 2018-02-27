@@ -51,6 +51,22 @@ namespace GasoLine
             }
             return Result;
         }
+
+        public bool Open(string path)
+        {
+            var bd = AutoShow.Instance;
+            //NOTE: удаление записей из БД перед повторным добавлением записей в БД - КОСТЫЛЬ!!!
+            bd.ClearAllVehicle();
+            bd.Load(path);
+
+            var vehicles = bd.GetAllVehicles;
+            var result = vehicles.Any();
+            this.ClearItems();
+
+            vehicles.ToList().ForEach((Vehicle v) => this.Items.Add(new VehicleViewModel(v)));
+
+            return result;
+        }
     }
 
     public class VehicleViewModel : INotifyPropertyChanged, IEditableObject, IDataErrorInfo
@@ -76,6 +92,9 @@ namespace GasoLine
             _methodsCheck.Add(nameof(this.Weight), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckWeight(value)));
             _methodsCheck.Add(nameof(this.TankCapacity), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckTankCapacity(value)));
         }
+
+        public VehicleViewModel(Vehicle v)
+            : this(v.name, v.enginePower, v.weight, v.resistanceWithMedian, v.tankCapacity) { }
 
         public Vehicle GetVehicleModel => _currentData.ToVehicle();
 

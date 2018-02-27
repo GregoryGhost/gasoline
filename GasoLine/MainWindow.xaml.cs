@@ -120,5 +120,30 @@ namespace GasoLine
             }
             
         }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            if (t == null)
+            {
+                MessageBox.Show("Ошибка подключения к БД", "Ошибка открытия",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                var path = "test.json";
+                if (t.Open(path))
+                {
+                    MessageBox.Show($"Записи были успешно загружены из файла {path}", "Загрузка",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Записи БД не были загружены из файла {path}. " +
+                        $"Записи содержать неверные данные.", "Ошибка загрузки",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
     }
 }
