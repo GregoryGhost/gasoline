@@ -189,5 +189,24 @@ namespace GasoLine
                 _path = dlg.FileName;
             }
         }
+
+        private void SaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = "Document",
+                DefaultExt = ".json",
+                Filter = "Text documents (.json)|*.json"
+            };
+
+            var result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                _path = dlg.FileName;
+            }
+
+            SaveItems_Click(sender, e);
+        }
     }
 }
