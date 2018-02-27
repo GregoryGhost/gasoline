@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:GasoLine"
-        Title="MainWindow" SizeToContent="Height" Width="420" ResizeMode="NoResize">
+        Title="MainWindow" SizeToContent="Height" Width="420" ResizeMode="NoResize"
+        Closing="Window_Closing">
     <Window.Resources>
         <local:Vehicles x:Key="Vehicles"/>
     </Window.Resources>

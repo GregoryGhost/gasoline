@@ -234,5 +234,10 @@ namespace GasoLine
             }
             Application.Current.Shutdown();
         }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Exit_Click(sender, null);
+        }
     }
 }
