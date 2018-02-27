@@ -94,5 +94,31 @@ namespace GasoLine
                 editableCollectionView.Remove(itemsControl.SelectedItem);
             }
         }
+
+        private void SaveItems_Click(object sender, RoutedEventArgs e)
+        {
+            var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            if(t == null)
+            {
+                MessageBox.Show("Ошибка подключения к БД", "Ошибка записи",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                var path = "test.json";
+                if (t.Save(path))
+                {
+                    MessageBox.Show($"Записи были успешно записаны в файл {path}", "Сохранение",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Записи БД не были сохранены в файл {path}. " +
+                        $"Записи содержать неверные данные.", "Ошибка записи",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            
+        }
     }
 }

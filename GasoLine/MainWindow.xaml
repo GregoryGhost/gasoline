@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:GasoLine"
         Title="MainWindow" SizeToContent="Height" Width="420" ResizeMode="NoResize">
+    <Window.Resources>
+        <local:Vehicles x:Key="Vehicles"/>
+    </Window.Resources>
     <StackPanel>
         <StackPanel.Resources>
-            <local:Vehicles x:Key="Vehicles"/>
-
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="5"/>
             </Style>
@@ -15,7 +16,7 @@
             <MenuItem Header="File">
                 <MenuItem Header="New"></MenuItem>
                 <MenuItem Header="Open"></MenuItem>
-                <MenuItem Header="Save"></MenuItem>
+                <MenuItem Header="Save" Click="SaveItems_Click"></MenuItem>
                 <MenuItem Header="Save As..."></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit"></MenuItem>

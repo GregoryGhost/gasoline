@@ -80,3 +80,9 @@ type VehicleModel(name, enginePower, weight, resistance, tankCapacity) =
                          ,this.Weight
                          ,this.Resistance
                          ,this.TankCapacity)
+    member this.ToVehicle() =
+        {name = this.Name
+        ;enginePower = this.EnginePower
+        ;weight = this.Weight
+        ;resistanceWithMedian = this.Resistance
+        ;tankCapacity = this.TankCapacity}
