@@ -208,5 +208,31 @@ namespace GasoLine
 
             SaveItems_Click(sender, e);
         }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Вы уверены что хотите выйти? " +
+                "Есть несохраненные данные, сохранить их?", "Закрытие программы", 
+                MessageBoxButton.YesNoCancel);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    if(_path == string.Empty)
+                    {
+                        SaveAs_Click(sender, e);
+                    }
+                    else
+                    {
+                        SaveItems_Click(sender, e);
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    return;
+            }
+            Application.Current.Shutdown();
+        }
     }
 }
