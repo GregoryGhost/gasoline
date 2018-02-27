@@ -98,7 +98,7 @@ namespace GasoLine
         private void SaveItems_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
-            if(t == null)
+            if (t == null)
             {
                 MessageBox.Show("Ошибка подключения к БД", "Ошибка записи",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -121,7 +121,7 @@ namespace GasoLine
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
+
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -212,13 +212,13 @@ namespace GasoLine
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Вы уверены что хотите выйти? " +
-                "Есть несохраненные данные, сохранить их?", "Закрытие программы", 
+                "Есть несохраненные данные, сохранить их?", "Закрытие программы",
                 MessageBoxButton.YesNoCancel);
 
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    if(_path == string.Empty)
+                    if (_path == string.Empty)
                     {
                         SaveAs_Click(sender, e);
                     }
@@ -238,6 +238,20 @@ namespace GasoLine
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Exit_Click(sender, null);
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            var link = "https://github.com/GregoryGhost/gasoline";
+            var result = MessageBox.Show($"Разработчик: Кулаков Григорий.\n" +
+                $"Репозиторий проекта: {link}\n" +
+                $"Перейти на страницу проекта?",
+                "О программе", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.OK)
+            {
+                System.Diagnostics.Process.Start(link);
+            }
         }
     }
 }
