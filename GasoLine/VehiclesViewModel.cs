@@ -17,6 +17,38 @@ namespace GasoLine
             Add(new VehicleViewModel("mazda2", 124, 2288.5, ModelService.Environment.RuggedTerrain, 90));
             Add(new VehicleViewModel("mazda3", 124, 23335.5, ModelService.Environment.Asphalt, 90));
         }
+
+        ///NOTE: временный костыль
+        bool _result = true;
+        private bool Result
+        {
+            get
+            {
+                return _result;
+            }
+            set
+            {
+                if (_result)
+                {
+                    _result = value;
+                }
+            }
+        }
+
+        private void ResetResult() => _result = true;
+
+        public bool Save(string path)
+        {
+            ResetResult();
+            var bd = AutoShow.Instance;
+            Items.ToList()
+                 .ForEach((VehicleViewModel v) => Result = bd.AddVehicle(v.GetVehicleModel).Any());
+            if (Result)
+            {
+                bd.Save(path);
+            }
+            return Result;
+        }
     }
 
     public class VehicleViewModel : INotifyPropertyChanged, IEditableObject, IDataErrorInfo
@@ -37,11 +69,13 @@ namespace GasoLine
             _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
             _methodsCheck = new Dictionary<string, Func<VehicleModel, string>>();
             _gibdd = new Gibdd();
-            _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) =>_gibdd.CheckName(value)));
+            _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckName(value)));
             _methodsCheck.Add(nameof(this.EnginePower), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckEnginePower(value)));
             _methodsCheck.Add(nameof(this.Weight), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckWeight(value)));
             _methodsCheck.Add(nameof(this.TankCapacity), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckTankCapacity(value)));
         }
+
+        public Vehicle GetVehicleModel => _currentData.ToVehicle();
 
         public string Name
         {
@@ -127,7 +161,20 @@ namespace GasoLine
 
         string IDataErrorInfo.Error => null;
 
-        public bool IsValid { get; private set; }
+        public bool IsValid
+        {
+            get
+            {
+                var valid = true;
+                foreach (var p in _isValidParam)
+                {
+                    valid = p.Value;
+                    if (valid == false) break;
+                }
+                return valid;
+            }
+        }
+        private Dictionary<string, bool> _isValidParam = new Dictionary<string, bool>();
 
         string IDataErrorInfo.this[string columnName]
         {
@@ -138,11 +185,11 @@ namespace GasoLine
                 if (_methodsCheck.ContainsKey(columnName))
                 {
                     result = _methodsCheck[columnName](_currentData);
-                    IsValid = false;
-                }
-                else
-                {
-                    IsValid = true;
+                    if (_isValidParam.ContainsKey(columnName) == false)
+                    {
+                        _isValidParam.Add(columnName, true);
+                    }
+                    _isValidParam[columnName] = (result == String.Empty) ? true : false;
                 }
 
                 return result;
@@ -151,7 +198,7 @@ namespace GasoLine
 
 
 
-        public override string ToString() => $"{Name}, {EnginePower:f}, {Weight:f}, {Resistance:G}, {TankCapacity:D}, {FuelConsumption}";
+        public override string ToString() => $"{Name}, {EnginePower:d}, {Weight:f}, {Resistance:G}, {TankCapacity:D}, {FuelConsumption}";
 
         #region INotifyPropertyChanged Members
 
