@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GasoLine"
         mc:Ignorable="d"
-        Title="ChangeItem" Height="210" Width="300">
-    <StackPanel Margin="5" Width="280">
+        Title="ChangeItem" Height="210" Width="330">
+    <StackPanel Margin="5" Width="300">
         <StackPanel.Resources>
             <Style TargetType="HeaderedContentControl">
                 <Setter Property="Margin" Value="3"/>
