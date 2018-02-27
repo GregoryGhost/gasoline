@@ -19,7 +19,7 @@ namespace GasoLine
 
             if (!editableCollectionView.CanAddNew)
             {
-                MessageBox.Show("You cannot add items to the list.");
+                MessageBox.Show("Вы не можете добавить запись в список.");
                 return;
             }
 
@@ -46,7 +46,7 @@ namespace GasoLine
         {
             if (itemsControl.SelectedItem == null)
             {
-                MessageBox.Show("No item is selected");
+                MessageBox.Show("Выделите запись.");
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace GasoLine
 
             if (item == null)
             {
-                MessageBox.Show("No Item is selected");
+                MessageBox.Show("Выделите запись.");
                 return;
             }
 
@@ -84,11 +84,11 @@ namespace GasoLine
 
             if (!editableCollectionView.CanRemove)
             {
-                MessageBox.Show("You cannot remove items from the list.");
+                MessageBox.Show("Вы не можете удалить запись из списка.");
                 return;
             }
 
-            if (MessageBox.Show("Are you sure you want to remove " + item.Name,
+            if (MessageBox.Show("Вы уверены что хотите удалить запись? " + item.Name,
                 "Remove Item", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 editableCollectionView.Remove(itemsControl.SelectedItem);

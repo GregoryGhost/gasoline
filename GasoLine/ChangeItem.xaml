@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GasoLine"
         mc:Ignorable="d"
-        Title="ChangeItem" Height="300" Width="300">
+        Title="ChangeItem" Height="210" Width="300">
     <StackPanel Margin="5" Width="280">
         <StackPanel.Resources>
             <Style TargetType="HeaderedContentControl">
@@ -44,7 +44,7 @@
             </Style>
         </StackPanel.Resources>
 
-        <HeaderedContentControl Header="Name:">
+        <HeaderedContentControl Header="Название:">
             <TextBox Width="140" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
                     <Binding Path="Name"  Mode="TwoWay"
@@ -57,7 +57,7 @@
                 </TextBox.Text>
             </TextBox>
         </HeaderedContentControl>
-        <HeaderedContentControl Header="Engine Power:">
+        <HeaderedContentControl Header="Мощность двигателя:">
             <TextBox Width="140" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
                     <Binding Path="EnginePower"  Mode="TwoWay"
@@ -70,7 +70,7 @@
                 </TextBox.Text>
             </TextBox>
         </HeaderedContentControl>
-        <HeaderedContentControl Header="Weight:">
+        <HeaderedContentControl Header="Вес:">
             <TextBox Width="140" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
                     <Binding Path="Weight"  Mode="TwoWay"
@@ -83,10 +83,10 @@
                 </TextBox.Text>
             </TextBox>
         </HeaderedContentControl>
-        <HeaderedContentControl Header="Resistance with median:">
+        <HeaderedContentControl Header="Сопротивление со средой:">
             <ComboBox Width="140" ItemsSource="{Binding Resistances}" SelectedItem="{Binding Path=Resistance, Mode=TwoWay}" />
         </HeaderedContentControl>
-        <HeaderedContentControl Header="Tank capacity:">
+        <HeaderedContentControl Header="Объем бака:">
             <TextBox Width="140" Style="{StaticResource TextBoxInError}">
                 <TextBox.Text>
                     <Binding Path="TankCapacity"  Mode="TwoWay"
