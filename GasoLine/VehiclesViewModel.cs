@@ -41,8 +41,10 @@ namespace GasoLine
         {
             ResetResult();
             var bd = AutoShow.Instance;
+            //NOTE: удаление записей из БД перед повторным добавлением записей в БД - КОСТЫЛЬ!!!
+            bd.ClearAllVehicle();
             Items.ToList()
-                 .ForEach((VehicleViewModel v) => Result = bd.AddVehicle(v.GetVehicleModel).Any());
+                 .ForEach((VehicleViewModel v) => Result = (bd.AddVehicle(v.GetVehicleModel).Any() == false));
             if (Result)
             {
                 bd.Save(path);
