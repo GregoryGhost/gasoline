@@ -71,9 +71,11 @@ namespace GasoLine
 
     public class VehicleViewModel : INotifyPropertyChanged, IEditableObject, IDataErrorInfo
     {
+        private delegate string CheckParam(VehicleModel model);
+
         private VehicleModel _copyData;
         private VehicleModel _currentData;
-        private Dictionary<string, Func<VehicleModel, string>> _methodsCheck;
+        private Dictionary<string, CheckParam> _methodsCheck;
         private Gibdd _gibdd;
 
         public VehicleViewModel()
@@ -85,12 +87,12 @@ namespace GasoLine
             double weight, ModelService.Environment resistance, int tankCapacity)
         {
             _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
-            _methodsCheck = new Dictionary<string, Func<VehicleModel, string>>();
+            _methodsCheck = new Dictionary<string, CheckParam>();
             _gibdd = new Gibdd();
-            _methodsCheck.Add(nameof(this.Name), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckName(value)));
-            _methodsCheck.Add(nameof(this.EnginePower), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckEnginePower(value)));
-            _methodsCheck.Add(nameof(this.Weight), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckWeight(value)));
-            _methodsCheck.Add(nameof(this.TankCapacity), new Func<VehicleModel, string>((VehicleModel value) => _gibdd.CheckTankCapacity(value)));
+            _methodsCheck.Add(nameof(this.Name),         ((VehicleModel value) => _gibdd.CheckName(value)));
+            _methodsCheck.Add(nameof(this.EnginePower),  ((VehicleModel value) => _gibdd.CheckEnginePower(value)));
+            _methodsCheck.Add(nameof(this.Weight),       ((VehicleModel value) => _gibdd.CheckWeight(value)));
+            _methodsCheck.Add(nameof(this.TankCapacity), ((VehicleModel value) => _gibdd.CheckTankCapacity(value)));
         }
 
         public VehicleViewModel(Vehicle v)
