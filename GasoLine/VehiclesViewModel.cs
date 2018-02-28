@@ -4,18 +4,33 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace GasoLine
 {
-    public class Vehicles : ObservableCollection<VehicleViewModel>
+    public class Vehicles :
+        ObservableCollection<VehicleViewModel>
     {
         public Vehicles()
         {
-            Add(new VehicleViewModel("mazda", 1000, 200.5, ModelService.Environment.Asphalt, 900));
-            Add(new VehicleViewModel("mazda2", 124, 2288.5, ModelService.Environment.RuggedTerrain, 90));
-            Add(new VehicleViewModel("mazda3", 124, 23335.5, ModelService.Environment.Asphalt, 90));
+            Add(new VehicleViewModel(
+                "mazda",
+                1000,
+                200.5,
+                ModelService.Environment.Asphalt,
+                900));
+            Add(new VehicleViewModel(
+                "mazda2",
+                124,
+                2288.5,
+                ModelService.Environment.RuggedTerrain,
+                90));
+            Add(new VehicleViewModel(
+                "mazda3",
+                124,
+                23335.5,
+                ModelService.Environment.Asphalt,
+                90));
         }
 
         ///NOTE: временный костыль
@@ -41,10 +56,15 @@ namespace GasoLine
         {
             ResetResult();
             var bd = AutoShow.Instance;
-            //NOTE: удаление записей из БД перед повторным добавлением записей в БД - КОСТЫЛЬ!!!
+            //NOTE: удаление записей из БД 
+            //      перед повторным добавлением 
+            //      записей в БД - КОСТЫЛЬ!!!
             bd.ClearAllVehicle();
-            Items.ToList()
-                 .ForEach((VehicleViewModel v) => Result = (bd.AddVehicle(v.GetVehicleModel).Any() == false));
+            Items
+                .ToList()
+                .ForEach((VehicleViewModel v) =>
+                            Result = (bd.AddVehicle(v.GetVehicleModel)
+                                        .Any() == false));
             if (Result)
             {
                 bd.Save(path);
@@ -63,13 +83,19 @@ namespace GasoLine
             var result = vehicles.Any();
             this.ClearItems();
 
-            vehicles.ToList().ForEach((Vehicle v) => this.Items.Add(new VehicleViewModel(v)));
+            vehicles
+                .ToList()
+                .ForEach((Vehicle v) =>
+                            this.Items.Add(new VehicleViewModel(v)));
 
             return result;
         }
     }
 
-    public class VehicleViewModel : INotifyPropertyChanged, IEditableObject, IDataErrorInfo
+    public class VehicleViewModel :
+        INotifyPropertyChanged,
+        IEditableObject,
+        IDataErrorInfo
     {
         private delegate string CheckParam(VehicleModel model);
 
@@ -79,24 +105,47 @@ namespace GasoLine
         private Gibdd _gibdd;
 
         public VehicleViewModel()
-            : this("mazda_rx-8", 192, 1429.0, ModelService.Environment.Asphalt, 65)
+            : this("mazda_rx-8",
+                  192,
+                  1429.0,
+                  ModelService.Environment.Asphalt,
+                  65)
         {
         }
 
-        public VehicleViewModel(string name, int enginePower,
-            double weight, ModelService.Environment resistance, int tankCapacity)
+        public VehicleViewModel(
+            string name,
+            int enginePower,
+            double weight,
+            ModelService.Environment resistance,
+            int tankCapacity)
         {
-            _currentData = new VehicleModel(name, enginePower, weight, resistance, tankCapacity);
-            _methodsCheck = new Dictionary<string, CheckParam>();
+            _currentData = new VehicleModel(name,
+                                            enginePower,
+                                            weight,
+                                            resistance,
+                                            tankCapacity);
             _gibdd = new Gibdd();
-            _methodsCheck.Add(nameof(this.Name),         ((VehicleModel value) => _gibdd.CheckName(value)));
-            _methodsCheck.Add(nameof(this.EnginePower),  ((VehicleModel value) => _gibdd.CheckEnginePower(value)));
-            _methodsCheck.Add(nameof(this.Weight),       ((VehicleModel value) => _gibdd.CheckWeight(value)));
-            _methodsCheck.Add(nameof(this.TankCapacity), ((VehicleModel value) => _gibdd.CheckTankCapacity(value)));
+            _methodsCheck = new Dictionary<string, CheckParam>
+            {
+                { nameof(this.Name),
+                    ((VehicleModel value) => _gibdd.CheckName(value)) },
+                { nameof(this.EnginePower),
+                    ((VehicleModel value) => _gibdd.CheckEnginePower(value))},
+                { nameof(this.Weight),
+                    ((VehicleModel value) => _gibdd.CheckWeight(value)) },
+                { nameof(this.TankCapacity),
+                    ((VehicleModel value) => _gibdd.CheckTankCapacity(value))}
+            };
         }
 
         public VehicleViewModel(Vehicle v)
-            : this(v.name, v.enginePower, v.weight, v.resistanceWithMedian, v.tankCapacity) { }
+            : this(v.name,
+                  v.enginePower,
+                  v.weight,
+                  v.resistanceWithMedian,
+                  v.tankCapacity)
+        { }
 
         public Vehicle GetVehicleModel => _currentData.ToVehicle();
 
@@ -151,7 +200,8 @@ namespace GasoLine
         }
 
         public List<string> Resistances =>
-            Enum.GetNames(typeof(ModelService.Environment)).ToList();
+            Enum.GetNames(typeof(ModelService.Environment))
+            .ToList();
 
         public int TankCapacity
         {
@@ -189,7 +239,7 @@ namespace GasoLine
             get
             {
                 var valid = true;
-                foreach (var p in _isValidParam)
+                foreach (var p in _isValidParams)
                 {
                     valid = p.Value;
                     if (valid == false) break;
@@ -197,22 +247,23 @@ namespace GasoLine
                 return valid;
             }
         }
-        private Dictionary<string, bool> _isValidParam = new Dictionary<string, bool>();
+        private Dictionary<string, bool> _isValidParams = 
+            new Dictionary<string, bool>();
 
-        string IDataErrorInfo.this[string columnName]
+        string IDataErrorInfo.this[string column]
         {
             get
             {
                 var result = String.Empty;
 
-                if (_methodsCheck.ContainsKey(columnName))
+                if (_methodsCheck.ContainsKey(column))
                 {
-                    result = _methodsCheck[columnName](_currentData);
-                    if (_isValidParam.ContainsKey(columnName) == false)
+                    result = _methodsCheck[column](_currentData);
+                    if (_isValidParams.ContainsKey(column) == false)
                     {
-                        _isValidParam.Add(columnName, true);
+                        _isValidParams.Add(column, true);
                     }
-                    _isValidParam[columnName] = (result == String.Empty) ? true : false;
+                    _isValidParams[column] = (result == "") ? true : false;
                 }
 
                 return result;
@@ -221,13 +272,19 @@ namespace GasoLine
 
 
 
-        public override string ToString() => $"{Name}, {EnginePower:d}, {Weight:f}, {Resistance:G}, {TankCapacity:D}, {FuelConsumption}";
+        public override string ToString() =>
+            $"{Name}, " +
+            $"{EnginePower:d}, " +
+            $"{Weight:f}, " +
+            $"{Resistance:G}, " +
+            $"{TankCapacity:D}, " +
+            $"{FuelConsumption}";
 
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName]string prop = "")
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
@@ -249,7 +306,7 @@ namespace GasoLine
 
         public void EndEdit()
         {
-            _copyData = new VehicleModel();
+            _copyData = null;
         }
 
         #endregion
