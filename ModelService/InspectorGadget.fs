@@ -2,17 +2,21 @@
 
 
 module Demands =
+
     type Parameter =
         | Empty
         | InvalidCharacter
         | AboveTheMaximum of int
         | BelowTheMinimum of int
+
+
     type RequirementsForVehicle =
         | Name of Parameter list 
         | EnginePower of Parameter
         | TankCapacity of Parameter
         | Weight of Parameter
         | ExistsElem
+
         
     let minEnginePower = 0
     let maxEnginePower = int (10.**8.)
@@ -26,9 +30,9 @@ module Demands =
     let minSymbol = 5
     let maxSymbol = 20
 
-open Demands
 
 module internal InspectorGadget =
+    open Demands
     open System.Text.RegularExpressions
 
     let patternForName = 
@@ -117,90 +121,192 @@ module internal InspectorGadget =
             None
 
     ///<summary>
-    ///Получает запись об транспортном средстве и проверяет ее поля на удовлетворение требованиям.
+    ///Получает запись об транспортном средстве и 
+    ///     проверяет ее поля на удовлетворение требованиям.
     ///</summary>
-    ///<returns>Возвращает список ошибочных полей</returns>
+    ///<returns>Возвращает последовательность ошибочных полей</returns>
     let validate (vehicle : Vehicle) : seq<RequirementsForVehicle> =
         [checkName         vehicle; 
          checkEnginePower  vehicle; 
          checkTankCapacity vehicle; 
          checkWeight       vehicle]
-        |> List.filter (function 
-                        | Some x -> true 
-                        | None   -> false) 
+        |> List.filter (Option.isSome) 
         |> List.map (Option.get)
         |> List.toSeq
 
+
+module internal ConverterParameters =
+    open Demands
+
+    let nameToString x = 
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> 
+            "Превышена максимально-допустимая длина, равная " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> 
+            "Должно быть минимум символов - " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> 
+            @"Допустимые символы - буквы английского алфавита,\
+                цифры, знаки ""-"", ""_"""
+
+    let concat x = 
+         x 
+         |> List.fold (fun acc x -> acc + (nameToString x)) ""
+         |> Some
+
+    let toString x = 
+        match x with
+        | Demands.Parameter.Empty -> "Заполните поле"
+        | Demands.Parameter.AboveTheMaximum z -> 
+            "Превышено максимально-допустимое значение, равное " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> 
+            "Значение меньше минимально-допустимого значения, равного " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - числа"
+
+    let choiceRequire = function
+        | Name y -> y |> concat
+        | Weight y -> y |> toString |> Some
+        | EnginePower y -> y |> toString |> Some
+        | TankCapacity y -> y |> toString |> Some
+        | _ -> Some "Unknown Error 1111"
+    
+    let unpackValue = function
+        | Some x -> x
+        | None -> System.String.Empty
+
+
 open InspectorGadget
+open Demands
+open ConverterParameters
 
 /// <summary>
 /// Проверяет запись VehicleModel на соответствие требованиям
 /// </summary>
 type Gibdd() =
-    let vehicle = { name = "Ferrari_458_Special";
-                    enginePower = 605;
-                    weight = 1480.0; 
-                    resistanceWithMedian = Environment.Asphalt;
-                    tankCapacity = 4497}
 
-    let convertNameToString x =
-        match x with
-        | Demands.Parameter.Empty -> "Заполните поле"
-        | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
-        | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
-        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
-
-    let concat x = 
-         x 
-         |> List.fold (fun acc x -> acc + (convertNameToString x)) ""
-         |> Some
-
-    let convertParameterToString x =
-        match x with
-        | Demands.Parameter.Empty -> "Заполните поле"
-        | Demands.Parameter.AboveTheMaximum z -> "Превышено максимально-допустимое значение, равное " + z.ToString()
-        | Demands.Parameter.BelowTheMinimum z -> "Значение меньше минимально-допустимого значения, равного " + z.ToString()
-        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - числа"
-
-    let choiceRequire x =
-        match x with
-        | Name y -> y |> concat
-        | Weight y -> y |> convertParameterToString |> Some
-        | EnginePower y -> y |> convertParameterToString |> Some
-        | TankCapacity y -> y |> convertParameterToString |> Some
-        | _ -> Some "Unknown Error 1111"
-
-    let unpackValue value = 
-        match value with
-        | Some x -> x
-        | None -> System.String.Empty 
-    
     /// <summary>
-    /// Проверяет название транспортного средства на соответствие заданным требованиям
+    /// Проверяет название транспортного средства 
+    ///     на соответствие заданным требованиям
     /// </summary>
     /// <param name="name">Название транспортного средства</param>
     /// <returns>Возвращает текст, содержащий в себе каким 
-    ///  требованиям должно удовлетворять название транспортного средства</returns>
+    ///     требованиям должно удовлетворять 
+    ///     название транспортного средства</returns>
     member this.CheckName(model : VehicleModel) : string =
-        {vehicle with name = model.Name}
+        model.ToVehicle()
         |> checkName 
         |> Option.bind choiceRequire
         |> unpackValue
-
+    
+    /// <summary>
+    /// Проверяет мощность двигателя транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Мощность двигателя транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     мощность двигателя транспортного средства</returns>
     member this.CheckEnginePower(model: VehicleModel) =
-        {vehicle with enginePower = model.EnginePower }
+        model.ToVehicle()
         |> checkEnginePower
         |> Option.bind choiceRequire
         |> unpackValue
     
+    /// <summary>
+    /// Проверяет вес транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Вес транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     вес транспортного средства</returns>
     member this.CheckWeight(model: VehicleModel) =
-        {vehicle with weight = model.Weight }
+        model.ToVehicle()
         |> checkWeight
         |> Option.bind choiceRequire
         |> unpackValue
     
+    /// <summary>
+    /// Проверяет объем бака транспортного средства
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Объем бака транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     объем бака транспортного средства</returns>
     member this.CheckTankCapacity(model: VehicleModel) =
-        {vehicle with tankCapacity = model.TankCapacity }
+        model.ToVehicle()
         |> checkTankCapacity
         |> Option.bind choiceRequire
         |> unpackValue
+
+
+open System.Runtime.CompilerServices
+
+[<Extension>]
+module Converters =
+    
+    /// <summary>
+    /// Конвертирует тип ошибки в текст с описанием ошибки
+    /// </summary>
+    /// <param name="x">Тип ошибки в требованиях 
+    ///     к характеристике транспортного средства</param>
+    [<Extension>]
+    let ToText(x : RequirementsForVehicle) =
+        x
+        |> choiceRequire
+        |> unpackValue
+
+
+/// <summary>
+/// Проверяет запись Vehicle на соответствие требованиям
+/// </summary>
+type Checker() =
+   
+    /// <summary>
+    /// Проверяет название транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Название транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должно удовлетворять
+    ///     название транспортного средства</returns>
+    member this.CheckName(model : Vehicle) = 
+        model
+        |> checkName
+
+    /// <summary>
+    /// Проверяет мощность двигателя транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Мощность двигателя транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должна удовлетворять
+    ///     мощность двигателя транспортного средства</returns>
+    member this.CheckEnginePower(model : Vehicle) =
+        model
+        |> checkEnginePower
+
+    /// <summary>
+    /// Проверяет вес транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Вес транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должен удовлетворять
+    ///     вес транспортного средства</returns>
+    member this.CheckWeight(model : Vehicle) = 
+        model
+        |> checkWeight
+
+    /// <summary>
+    /// Проверяет объём бака транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Объём бака транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должен удовлетворять
+    ///     объём бака транспортного средства</returns>
+    member this.CheckTankCapacity(model : Vehicle) = 
+        model
+        |> checkTankCapacity

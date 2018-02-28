@@ -27,7 +27,8 @@ namespace GasoLine
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
-            if ((this.DataContext as VehicleViewModel).IsValid == false)
+            var v = this.DataContext as VehicleViewModel;
+            if (v.IsValid == false)
             {
                 MessageBox.Show("Исправьте поля записи!");
                 return;

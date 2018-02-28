@@ -15,7 +15,8 @@ namespace GasoLine
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            var editableCollectionView = itemsControl.Items as IEditableCollectionView;
+            var editableCollectionView = 
+                itemsControl.Items as IEditableCollectionView;
 
             if (!editableCollectionView.CanAddNew)
             {
@@ -25,7 +26,8 @@ namespace GasoLine
 
             // Create a window that prompts the user to enter a new
             // item to sell.
-            var win = new ChangeItem { DataContext = editableCollectionView.AddNew() };
+            var win = new ChangeItem {
+                DataContext = editableCollectionView.AddNew() };
 
             //Create a new item to be added to the collection.
 
@@ -55,7 +57,8 @@ namespace GasoLine
 
             // Create a window that prompts the user to edit an item.
             editableCollectionView.EditItem(itemsControl.SelectedItem);
-            var win = new ChangeItem { DataContext = itemsControl.SelectedItem };
+            var win = new ChangeItem {
+                DataContext = itemsControl.SelectedItem };
 
             // If the user submits the new item, commit the changes.
             // If the user cancels the edits, discard the changes. 
@@ -88,8 +91,11 @@ namespace GasoLine
                 return;
             }
 
-            if (MessageBox.Show("Вы уверены что хотите удалить запись? " + item.Name,
-                "Remove Item", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            var res = MessageBox.Show(
+                "Вы уверены что хотите удалить запись? " + item.Name,
+                "Remove Item",
+                MessageBoxButton.YesNo);
+            if (res == MessageBoxResult.Yes)
             {
                 editableCollectionView.Remove(itemsControl.SelectedItem);
             }
@@ -98,10 +104,13 @@ namespace GasoLine
         private void SaveItems_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
-            if(t == null)
+            if (t == null)
             {
-                MessageBox.Show("Ошибка подключения к БД", "Ошибка записи",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "Ошибка подключения к БД",
+                    "Ошибка записи",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 _saveData = false;
             }
             else
@@ -112,19 +121,25 @@ namespace GasoLine
                 }
                 if (t.Save(_path))
                 {
-                    MessageBox.Show($"Записи были успешно записаны в файл {_path}", "Сохранение",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(
+                        $"Записи были успешно записаны в файл {_path}",
+                        "Сохранение",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                     _saveData = true;
                 }
                 else
                 {
                     _saveData = false;
-                    MessageBox.Show($"Записи БД не были сохранены в файл {_path}. " +
-                        $"Записи содержать неверные данные.", "Ошибка записи",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(
+                        $"Записи БД не были сохранены в файл {_path}.\n" +
+                        $"Записи содержать неверные данные.",
+                        "Ошибка записи",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
             }
-            
+
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -133,7 +148,8 @@ namespace GasoLine
 
             if (_saveData == false)
             {
-                var r = MessageBox.Show("Данные не были сохранены.\n" +
+                var r = MessageBox.Show(
+                    "Данные не были сохранены.\n" +
                     "Сохранить ?",
                     "Открытие нового файла",
                     MessageBoxButton.YesNoCancel,
@@ -154,8 +170,11 @@ namespace GasoLine
 
             if (t == null)
             {
-                MessageBox.Show("Ошибка подключения к БД", "Ошибка открытия",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "Ошибка подключения к БД",
+                    "Ошибка открытия",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 _saveData = false;
             }
             else
@@ -168,7 +187,6 @@ namespace GasoLine
                 };
 
                 var result = dlg.ShowDialog();
-
                 if (result == true)
                 {
                     _path = dlg.FileName;
@@ -178,16 +196,23 @@ namespace GasoLine
                 {
                     _path = _defaultPath;
                 }
+
                 if (t.Open(_path))
                 {
-                    MessageBox.Show($"Записи были успешно загружены из файла {_path}", "Загрузка",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(
+                        $"Записи были успешно загружены из файла {_path}",
+                        "Загрузка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"Записи БД не были загружены из файла {_path}. " +
-                        $"Записи содержать неверные данные.", "Ошибка загрузки",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(
+                        $"Записи БД не были загружены из файла {_path}.\n" +
+                        $"Записи содержать неверные данные.",
+                        "Ошибка загрузки",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
             }
         }
@@ -198,10 +223,11 @@ namespace GasoLine
         private void New_Click(object sender, RoutedEventArgs e)
         {
             var t = (Vehicles)this.Resources[nameof(Vehicles)];
-            
-            if(_saveData == false)
+
+            if (_saveData == false)
             {
-                var r = MessageBox.Show("Данные не были сохранены.\n" +
+                var r = MessageBox.Show(
+                    "Данные не были сохранены.\n" +
                     "Сохранить ?",
                     "Создание нового файла",
                     MessageBoxButton.YesNoCancel,
@@ -257,15 +283,16 @@ namespace GasoLine
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Вы уверены что хотите выйти?\n" +
+            var result = MessageBox.Show(
+                "Вы уверены что хотите выйти?\n" +
                 "Есть несохраненные данные, сохранить их?",
-                "Закрытие программы", 
+                "Закрытие программы",
                 MessageBoxButton.YesNoCancel);
 
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    if(_path == string.Empty)
+                    if (_path == string.Empty)
                     {
                         SaveAs_Click(sender, e);
                     }
@@ -290,10 +317,13 @@ namespace GasoLine
         private void About_Click(object sender, RoutedEventArgs e)
         {
             var link = "https://github.com/GregoryGhost/gasoline";
-            var result = MessageBox.Show($"Разработчик: Кулаков Григорий.\n" +
+            var result = MessageBox.Show(
+                $"Разработчик: Кулаков Григорий.\n" +
                 $"Репозиторий проекта: {link}\n" +
                 $"Перейти на страницу проекта?",
-                "О программе", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                "О программе", MessageBoxButton.OKCancel,
+                MessageBoxImage.Question);
+
             if (result == MessageBoxResult.OK)
             {
                 System.Diagnostics.Process.Start(link);
