@@ -221,11 +221,7 @@ namespace GasoLine
         {
             get
             {
-                var vehicle = new ModelService.Vehicle(this.Name,
-                    this.EnginePower,
-                    this.Weight,
-                    this.Resistance.ReadFromString(),
-                    this.TankCapacity);
+                var vehicle = _currentData.ToVehicle();
                 var result = Manager.CalcFuelConsumption(vehicle);
 
                 return result;
