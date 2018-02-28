@@ -8,8 +8,8 @@ open System.Runtime.CompilerServices
 module ExtensionEnvironment =
     [<Extension>]
     let ReadFromString (x : System.String) =
-            System.Enum.Parse(typeof<ModelService.Environment>, x)
-            :?> ModelService.Environment
+        System.Enum.Parse(typeof<ModelService.Environment>, x)
+        :?> ModelService.Environment
 
 
 /// <summary>
@@ -21,15 +21,15 @@ type Manager =
     /// </summary>
     /// <returns>Возвращает строку с расходом топлива</returns>
     static member CalcFuelConsumption (vehicle : Vehicle) : string = 
-            let isOK =  
-                vehicle 
-                |> InspectorGadget.validate 
-                |> Seq.isEmpty
+        let isOK =  
+            vehicle 
+            |> InspectorGadget.validate 
+            |> Seq.isEmpty
 
-            if isOK then 
-                vehicle.CalcFuelConsumption.ToString()
-            else
-                Environment.NANI.ToString()
+        if isOK then 
+            vehicle.CalcFuelConsumption.ToString()
+        else
+            Environment.NANI.ToString()
 
 
 /// <summary>

@@ -124,7 +124,7 @@ module internal InspectorGadget =
     ///Получает запись об транспортном средстве и 
     ///     проверяет ее поля на удовлетворение требованиям.
     ///</summary>
-    ///<returns>Возвращает список ошибочных полей</returns>
+    ///<returns>Возвращает последовательность ошибочных полей</returns>
     let validate (vehicle : Vehicle) : seq<RequirementsForVehicle> =
         [checkName         vehicle; 
          checkEnginePower  vehicle; 
@@ -195,19 +195,43 @@ type Gibdd() =
         |> checkName 
         |> Option.bind choiceRequire
         |> unpackValue
-
+    
+    /// <summary>
+    /// Проверяет мощность двигателя транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Мощность двигателя транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     мощность двигателя транспортного средства</returns>
     member this.CheckEnginePower(model: VehicleModel) =
         {vehicle with enginePower = model.EnginePower }
         |> checkEnginePower
         |> Option.bind choiceRequire
         |> unpackValue
     
+    /// <summary>
+    /// Проверяет вес транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Вес транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     вес транспортного средства</returns>
     member this.CheckWeight(model: VehicleModel) =
         {vehicle with weight = model.Weight }
         |> checkWeight
         |> Option.bind choiceRequire
         |> unpackValue
     
+    /// <summary>
+    /// Проверяет объем бака транспортного средства
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Объем бака транспортного средства</param>
+    /// <returns>Возвращает текст, содержащий в себе каким 
+    ///     требованиям должно удовлетворять 
+    ///     объем бака транспортного средства</returns>
     member this.CheckTankCapacity(model: VehicleModel) =
         {vehicle with tankCapacity = model.TankCapacity }
         |> checkTankCapacity
