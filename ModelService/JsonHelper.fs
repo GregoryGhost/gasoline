@@ -32,15 +32,13 @@ module private Converter =
         | _ -> Environment.NANI
 
  let toVehicle (r : JRecords.Root) = 
-        let v = {
-                name = r.Name
-                ;enginePower = r.EnginePower
-                ;weight = r.Weight |> double
-                ;resistanceWithMedian = 
-                    r.ResistanceWithMedian 
-                    |> toResistance
-                ;tankCapacity = r.TankCapacity}
-        v
+        { name = r.Name
+          ;enginePower = r.EnginePower
+          ;weight = r.Weight |> double
+          ;resistanceWithMedian = 
+            r.ResistanceWithMedian 
+            |> toResistance
+          ;tankCapacity = r.TankCapacity }
  
  let toVehicles (jrecords : JRecords.Root[]) =
         let mutable vehicles : Vehicle list = []

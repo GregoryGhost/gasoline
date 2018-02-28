@@ -2,17 +2,21 @@
 
 
 module Demands =
+
     type Parameter =
         | Empty
         | InvalidCharacter
         | AboveTheMaximum of int
         | BelowTheMinimum of int
+
+
     type RequirementsForVehicle =
         | Name of Parameter list 
         | EnginePower of Parameter
         | TankCapacity of Parameter
         | Weight of Parameter
         | ExistsElem
+
         
     let minEnginePower = 0
     let maxEnginePower = int (10.**8.)
@@ -26,9 +30,9 @@ module Demands =
     let minSymbol = 5
     let maxSymbol = 20
 
-open Demands
 
 module internal InspectorGadget =
+    open Demands
     open System.Text.RegularExpressions
 
     let patternForName = 
@@ -117,7 +121,8 @@ module internal InspectorGadget =
             None
 
     ///<summary>
-    ///Получает запись об транспортном средстве и проверяет ее поля на удовлетворение требованиям.
+    ///Получает запись об транспортном средстве и 
+    ///     проверяет ее поля на удовлетворение требованиям.
     ///</summary>
     ///<returns>Возвращает список ошибочных полей</returns>
     let validate (vehicle : Vehicle) : seq<RequirementsForVehicle> =
@@ -125,62 +130,66 @@ module internal InspectorGadget =
          checkEnginePower  vehicle; 
          checkTankCapacity vehicle; 
          checkWeight       vehicle]
-        |> List.filter (function 
-                        | Some x -> true 
-                        | None   -> false) 
+        |> List.filter (Option.isSome) 
         |> List.map (Option.get)
         |> List.toSeq
 
+
 open InspectorGadget
+open Demands
 
 /// <summary>
 /// Проверяет запись VehicleModel на соответствие требованиям
 /// </summary>
 type Gibdd() =
-    let vehicle = { name = "Ferrari_458_Special";
-                    enginePower = 605;
-                    weight = 1480.0; 
-                    resistanceWithMedian = Environment.Asphalt;
-                    tankCapacity = 4497}
+    let vehicle = { name = "Ferrari_458_Special"
+                    ;enginePower = 605
+                    ;weight = 1480.0 
+                    ;resistanceWithMedian = Environment.Asphalt
+                    ;tankCapacity = 4497 }
 
-    let convertNameToString x =
-        match x with
+    let convertNameToString = function
         | Demands.Parameter.Empty -> "Заполните поле"
-        | Demands.Parameter.AboveTheMaximum z -> "Превышена максимально-допустимая длина, равная " + z.ToString()
-        | Demands.Parameter.BelowTheMinimum z -> "Должно быть минимум символов - " + z.ToString()
-        | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - буквы английского алфавита, цифры, знаки ""-"", ""_"""
+        | Demands.Parameter.AboveTheMaximum z -> 
+            "Превышена максимально-допустимая длина, равная " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> 
+            "Должно быть минимум символов - " + z.ToString()
+        | Demands.Parameter.InvalidCharacter -> 
+            @"Допустимые символы - буквы английского алфавита,\\
+                цифры, знаки ""-"", ""_"""
 
     let concat x = 
          x 
          |> List.fold (fun acc x -> acc + (convertNameToString x)) ""
          |> Some
 
-    let convertParameterToString x =
-        match x with
+    let convertParameterToString = function
         | Demands.Parameter.Empty -> "Заполните поле"
-        | Demands.Parameter.AboveTheMaximum z -> "Превышено максимально-допустимое значение, равное " + z.ToString()
-        | Demands.Parameter.BelowTheMinimum z -> "Значение меньше минимально-допустимого значения, равного " + z.ToString()
+        | Demands.Parameter.AboveTheMaximum z -> 
+            "Превышено максимально-допустимое значение, равное " + z.ToString()
+        | Demands.Parameter.BelowTheMinimum z -> 
+            "Значение меньше минимально-допустимого значения, равного " + z.ToString()
         | Demands.Parameter.InvalidCharacter -> @"Допустимые символы - числа"
 
-    let choiceRequire x =
-        match x with
+    let choiceRequire = function
         | Name y -> y |> concat
         | Weight y -> y |> convertParameterToString |> Some
         | EnginePower y -> y |> convertParameterToString |> Some
         | TankCapacity y -> y |> convertParameterToString |> Some
         | _ -> Some "Unknown Error 1111"
 
-    let unpackValue value = 
-        match value with
+    let unpackValue = function
         | Some x -> x
-        | None -> System.String.Empty 
+        | None -> System.String.Empty
     
     /// <summary>
-    /// Проверяет название транспортного средства на соответствие заданным требованиям
+    /// Проверяет название транспортного средства 
+    ///     на соответствие заданным требованиям
     /// </summary>
     /// <param name="name">Название транспортного средства</param>
     /// <returns>Возвращает текст, содержащий в себе каким 
-    ///  требованиям должно удовлетворять название транспортного средства</returns>
+    ///     требованиям должно удовлетворять 
+    ///     название транспортного средства</returns>
     member this.CheckName(model : VehicleModel) : string =
         {vehicle with name = model.Name}
         |> checkName 
