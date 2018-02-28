@@ -135,35 +135,27 @@ module internal InspectorGadget =
         |> List.toSeq
 
 
-open InspectorGadget
-open Demands
+module internal ConverterParameters =
+    open Demands
 
-/// <summary>
-/// Проверяет запись VehicleModel на соответствие требованиям
-/// </summary>
-type Gibdd() =
-    let vehicle = { name = "Ferrari_458_Special"
-                    ;enginePower = 605
-                    ;weight = 1480.0 
-                    ;resistanceWithMedian = Environment.Asphalt
-                    ;tankCapacity = 4497 }
-
-    let convertNameToString = function
+    let nameToString x = 
+        match x with
         | Demands.Parameter.Empty -> "Заполните поле"
         | Demands.Parameter.AboveTheMaximum z -> 
             "Превышена максимально-допустимая длина, равная " + z.ToString()
         | Demands.Parameter.BelowTheMinimum z -> 
             "Должно быть минимум символов - " + z.ToString()
         | Demands.Parameter.InvalidCharacter -> 
-            @"Допустимые символы - буквы английского алфавита,\\
+            @"Допустимые символы - буквы английского алфавита,\
                 цифры, знаки ""-"", ""_"""
 
     let concat x = 
          x 
-         |> List.fold (fun acc x -> acc + (convertNameToString x)) ""
+         |> List.fold (fun acc x -> acc + (nameToString x)) ""
          |> Some
 
-    let convertParameterToString = function
+    let toString x = 
+        match x with
         | Demands.Parameter.Empty -> "Заполните поле"
         | Demands.Parameter.AboveTheMaximum z -> 
             "Превышено максимально-допустимое значение, равное " + z.ToString()
@@ -173,15 +165,25 @@ type Gibdd() =
 
     let choiceRequire = function
         | Name y -> y |> concat
-        | Weight y -> y |> convertParameterToString |> Some
-        | EnginePower y -> y |> convertParameterToString |> Some
-        | TankCapacity y -> y |> convertParameterToString |> Some
+        | Weight y -> y |> toString |> Some
+        | EnginePower y -> y |> toString |> Some
+        | TankCapacity y -> y |> toString |> Some
         | _ -> Some "Unknown Error 1111"
-
+    
     let unpackValue = function
         | Some x -> x
         | None -> System.String.Empty
-    
+
+
+open InspectorGadget
+open Demands
+open ConverterParameters
+
+/// <summary>
+/// Проверяет запись VehicleModel на соответствие требованиям
+/// </summary>
+type Gibdd() =
+
     /// <summary>
     /// Проверяет название транспортного средства 
     ///     на соответствие заданным требованиям
@@ -191,7 +193,7 @@ type Gibdd() =
     ///     требованиям должно удовлетворять 
     ///     название транспортного средства</returns>
     member this.CheckName(model : VehicleModel) : string =
-        {vehicle with name = model.Name}
+        model.ToVehicle()
         |> checkName 
         |> Option.bind choiceRequire
         |> unpackValue
@@ -205,7 +207,7 @@ type Gibdd() =
     ///     требованиям должно удовлетворять 
     ///     мощность двигателя транспортного средства</returns>
     member this.CheckEnginePower(model: VehicleModel) =
-        {vehicle with enginePower = model.EnginePower }
+        model.ToVehicle()
         |> checkEnginePower
         |> Option.bind choiceRequire
         |> unpackValue
@@ -219,7 +221,7 @@ type Gibdd() =
     ///     требованиям должно удовлетворять 
     ///     вес транспортного средства</returns>
     member this.CheckWeight(model: VehicleModel) =
-        {vehicle with weight = model.Weight }
+        model.ToVehicle()
         |> checkWeight
         |> Option.bind choiceRequire
         |> unpackValue
@@ -233,7 +235,78 @@ type Gibdd() =
     ///     требованиям должно удовлетворять 
     ///     объем бака транспортного средства</returns>
     member this.CheckTankCapacity(model: VehicleModel) =
-        {vehicle with tankCapacity = model.TankCapacity }
+        model.ToVehicle()
         |> checkTankCapacity
         |> Option.bind choiceRequire
         |> unpackValue
+
+
+open System.Runtime.CompilerServices
+
+[<Extension>]
+module Converters =
+    
+    /// <summary>
+    /// Конвертирует тип ошибки в текст с описанием ошибки
+    /// </summary>
+    /// <param name="x">Тип ошибки в требованиях 
+    ///     к характеристике транспортного средства</param>
+    [<Extension>]
+    let ToText(x : RequirementsForVehicle) =
+        x
+        |> choiceRequire
+        |> unpackValue
+
+
+/// <summary>
+/// Проверяет запись Vehicle на соответствие требованиям
+/// </summary>
+type Checker() =
+   
+    /// <summary>
+    /// Проверяет название транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Название транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должно удовлетворять
+    ///     название транспортного средства</returns>
+    member this.CheckName(model : Vehicle) = 
+        model
+        |> checkName
+
+    /// <summary>
+    /// Проверяет мощность двигателя транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Мощность двигателя транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должна удовлетворять
+    ///     мощность двигателя транспортного средства</returns>
+    member this.CheckEnginePower(model : Vehicle) =
+        model
+        |> checkEnginePower
+
+    /// <summary>
+    /// Проверяет вес транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Вес транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должен удовлетворять
+    ///     вес транспортного средства</returns>
+    member this.CheckWeight(model : Vehicle) = 
+        model
+        |> checkWeight
+
+    /// <summary>
+    /// Проверяет объём бака транспортного средства 
+    ///     на соответствие заданным требованиям
+    /// </summary>
+    /// <param name="name">Объём бака транспортного средства</param>
+    /// <returns>Возвращает ошибки, которые показывают 
+    ///     каким требованиям должен удовлетворять
+    ///     объём бака транспортного средства</returns>
+    member this.CheckTankCapacity(model : Vehicle) = 
+        model
+        |> checkTankCapacity
