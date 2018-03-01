@@ -9,14 +9,15 @@ module Tests =
 
     let suite =
         TestList [
-            TestListAddVehicle.testAddVehicle;
-            CalcFuelConsumption.testValidVehicle;
-            CalcFuelConsumption.testInvalidVehicle;
-            TestAutoShow.testRemoveRecord;
-            TestAutoShow.testUpdateVehicle;
-            TestVehicleModel.testProperties;
-            TestVehicleModel.testMethods;
-            TestChecker.tests;
-            TestGibdd.testMethods;
-            TestGibdd.testToText
+            TestListAddVehicle.testAddVehicle
+            ;CalcFuelConsumption.testValidVehicle
+            ;CalcFuelConsumption.testInvalidVehicle
+            ;TestAutoShow.testRemoveRecord
+            ;TestAutoShow.testUpdateVehicle
+            ;TestVehicleModel.testProperties
+            ;TestVehicleModel.testMethods
+            ;TestChecker.tests
+            ;TestGibdd.testMethods
+            ;TestGibdd.testToText
+            ;TestEnvironmentConvert.testReadFromString
         ]

@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Var.fs" />
+    <Compile Include="TestEnvironmentConvert.fs" />
     <Compile Include="TestListAddVehicle.fs" />
     <Compile Include="CalcFuelConsumption.fs" />
     <Compile Include="TestChecker.fs" />
