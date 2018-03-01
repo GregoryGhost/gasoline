@@ -69,11 +69,11 @@ type VehicleModel(name, enginePower, weight, resistance, tankCapacity) =
     let mutable tankCapacity = tankCapacity
 
     new() = VehicleModel(
-                "mazda-rx8", 
-                270, 
-                670.0, 
+                "mazda_rx-8", 
+                192, 
+                1429.0, 
                 Environment.Asphalt, 
-                200)
+                65)
 
     /// <summary>
     /// Название транспортного средства

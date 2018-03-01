@@ -9,4 +9,6 @@ module Var =
             resistanceWithMedian = Environment.Asphalt;
             tankCapacity = 65;}
 
+    let modelVehicle = new VehicleModel()
+
     let autoShow = AutoShow.Instance 

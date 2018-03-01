@@ -14,4 +14,5 @@ module Tests =
             CalcFuelConsumption.testInvalidVehicle;
             TestAutoShow.testRemoveRecord;
             TestAutoShow.testUpdateVehicle;
+            TestVehicleModel.testProperties;
         ]
