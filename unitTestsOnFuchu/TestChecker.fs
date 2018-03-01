@@ -10,70 +10,43 @@ module TestChecker =
     let tests = 
         testList "Validate methods of check errors of Checker" [
             testCase "Check Name" <| (fun _ ->
-                let invalidVehicle =
-                    {validVehicle with name = "mazda#22"}
-
-                let expected = 
-                    [InvalidCharacter]
-                    |> Name
-                    |> Some
-                    
+                let expected = errorInvalidCharacter  
+                
                 let actual =
-                    invalidVehicle
+                    invalidName
                     |> checker.CheckName
 
                 Assert.Equal("", expected, actual);
             );
 
             testCase "Check Engine Power" <| (fun _ ->
-                let invalidVehicle =
-                    {validVehicle
-                        with enginePower = minEnginePower - 10}
-
                 let expected = 
-                    Demands.minEnginePower
-                    |> BelowTheMinimum
-                    |> EnginePower
-                    |> Some
+                    errorMinEnginePower
                     
                 let actual = 
-                    invalidVehicle
+                    invalidEnginePower
                     |> checker.CheckEnginePower
 
                 Assert.Equal("", expected, actual);
             );
 
             testCase "Check Weight" <| (fun _ ->
-                let invalidVehicle =
-                    {validVehicle 
-                        with weight = minWeight - 10.}
-
                 let expected = 
-                    Demands.minWeight |> int
-                    |> BelowTheMinimum
-                    |> Weight
-                    |> Some
-                    
+                    errorMinWeight
+
                 let actual = 
-                    invalidVehicle
+                    invalidWeight
                     |> checker.CheckWeight
 
                 Assert.Equal("", expected, actual);
             );
 
             testCase "Check Tank Capacity" <| (fun _ ->
-                let invalidVehicle =
-                    {validVehicle 
-                        with tankCapacity = minTankCapacity - 10}
-
                 let expected = 
-                    Demands.minTankCapacity
-                    |> BelowTheMinimum
-                    |> TankCapacity
-                    |> Some
+                    errorMinTankCapacity
                     
                 let actual = 
-                    invalidVehicle
+                    invalidTankCapacity
                     |> checker.CheckTankCapacity
 
                 Assert.Equal("", expected, actual);

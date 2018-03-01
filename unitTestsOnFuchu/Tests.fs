@@ -16,5 +16,7 @@ module Tests =
             TestAutoShow.testUpdateVehicle;
             TestVehicleModel.testProperties;
             TestVehicleModel.testMethods;
-            TestChecker.tests
+            TestChecker.tests;
+            TestGibdd.testMethods;
+            TestGibdd.testToText
         ]
