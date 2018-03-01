@@ -4,6 +4,7 @@ module TestVehicleModel =
     open Fuchu.Tests
     open Fuchu
     open Var
+    open ModelService
 
     let testProperties = 
         testList "Check properties of Vehicle Model" [
@@ -55,5 +56,24 @@ module TestVehicleModel =
                     modelVehicle.TankCapacity
 
                 Assert.Equal("", expected, mes); 
+            );
+        ];
+    
+    let testMethods = 
+        testList @"Check methods of Vehicle Model" [
+            testCase "ToVehicle" <| (fun _ ->
+                let expected = validVehicle
+
+                let actual = modelVehicle.ToVehicle()
+
+                Assert.Equal("", expected, actual);
+            );
+
+            testCase "Clone" <| (fun _ ->
+                let expected = modelVehicle.ToVehicle()
+
+                let actual = modelVehicle.Clone().ToVehicle()
+
+                Assert.Equal("", expected, actual);
             );
         ];
