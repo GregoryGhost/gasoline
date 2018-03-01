@@ -10,7 +10,8 @@ module Tests =
     let suite =
         TestList [
             TestListAddVehicle.testAddVehicle;
-            CalcFuelConsumption.testCalcFuelConsumption;
+            CalcFuelConsumption.testValidVehicle;
+            CalcFuelConsumption.testInvalidVehicle;
             testList "Update vehicle to auto show" [
                 testCase "new record" <| (fun _ ->
                     let newV = {validVehicle with enginePower = 225}
