@@ -15,5 +15,6 @@ module Tests =
             TestAutoShow.testRemoveRecord;
             TestAutoShow.testUpdateVehicle;
             TestVehicleModel.testProperties;
-            TestVehicleModel.testMethods
+            TestVehicleModel.testMethods;
+            TestChecker.tests
         ]

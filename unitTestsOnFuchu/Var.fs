@@ -12,3 +12,5 @@ module Var =
     let modelVehicle = new VehicleModel()
 
     let autoShow = AutoShow.Instance 
+
+    let checker = new Checker()
