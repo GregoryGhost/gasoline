@@ -18,13 +18,18 @@ module TestGibdd =
             record.Data |> toVehicleModel
             |> checker
 
-        Assert.NotEqual("", expected, actual)
+        Assert.Equal("", expected, actual)
 
     let testMethods = 
         testList "Validate methods of Gibdd" [
             testList "Check Name" [
                 testCase "invalid character" <| (fun _ ->
                     invalidChar
+                    |> testCheck gibdd.CheckName
+                );
+
+                testCase "above max symbol" <| (fun _ ->
+                    aboveMaxSymbol
                     |> testCheck gibdd.CheckName
                 );
             ];

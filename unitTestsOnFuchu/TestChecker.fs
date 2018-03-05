@@ -19,10 +19,17 @@ module TestChecker =
 
     let tests = 
         testList "Validate methods of check errors of Checker" [
-            testCase "Check Name" <| (fun _ ->
-                invalidChar
-                |> testCheck checker.CheckName
-            );
+            testList "Check Name" [
+                testCase "invalid character" <| (fun _ ->
+                    invalidChar
+                    |> testCheck checker.CheckName
+                );
+
+                testCase "above max symbol" <| (fun _ ->
+                    aboveMaxSymbol
+                    |> testCheck checker.CheckName
+                );
+            ];
 
             testCase "Check Engine Power" <| (fun _ ->
                 let expected = 
