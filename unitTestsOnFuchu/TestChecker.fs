@@ -34,6 +34,11 @@ module TestChecker =
                     belowMinSymbol
                     |> testCheck checker.CheckName
                 );
+
+                testCase "empty string" <| (fun _ ->
+                    emptyName
+                    |> testCheck checker.CheckName
+                );
             ];
 
             testCase "Check Engine Power" <| (fun _ ->
