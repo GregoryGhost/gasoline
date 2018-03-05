@@ -29,6 +29,11 @@ module TestChecker =
                     aboveMaxSymbol
                     |> testCheck checker.CheckName
                 );
+
+                testCase "below min symbol" <| (fun _ ->
+                    belowMinSymbol
+                    |> testCheck checker.CheckName
+                );
             ];
 
             testCase "Check Engine Power" <| (fun _ ->

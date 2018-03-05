@@ -11,7 +11,8 @@ module Requirements =
         { Data : Vehicle
           Requirement : RequirementsForVehicle option }
     
-    let genName n = String.replicate n "test"
+    let minName = "test"
+    let genName n = String.replicate n minName
 
     let errorInvalidCharacter = 
         [InvalidCharacter]
@@ -20,6 +21,11 @@ module Requirements =
     
     let errorMaxSymbolName =
         [AboveTheMaximum <| maxSymbol]
+        |> Name
+        |> Some
+
+    let errorMinSymbolName =
+        [BelowTheMinimum <| minSymbol]
         |> Name
         |> Some
 
@@ -32,6 +38,11 @@ module Requirements =
                 { Data = {validVehicle 
                             with name = maxSymbol |> genName}
                   Requirement = errorMaxSymbolName }
+    
+    let belowMinSymbol = 
+                { Data = {validVehicle 
+                            with name = minName}
+                  Requirement = errorMinSymbolName }
 
     let invalidEnginePower =
         {validVehicle
