@@ -3,20 +3,25 @@
 module TestChecker = 
     open Fuchu.Tests
     open Fuchu
-    open Var
-    open ModelService.Demands
     open ModelService
+    open Var
+    open Requirements
+
+
+    let testCheck checker record =
+        let expected = record.Requirement 
+                
+        let actual =
+            record.Data
+            |> checker
+
+        Assert.Equal("", expected, actual)
 
     let tests = 
         testList "Validate methods of check errors of Checker" [
             testCase "Check Name" <| (fun _ ->
-                let expected = errorInvalidCharacter  
-                
-                let actual =
-                    invalidName
-                    |> checker.CheckName
-
-                Assert.Equal("", expected, actual);
+                invalidChar
+                |> testCheck checker.CheckName
             );
 
             testCase "Check Engine Power" <| (fun _ ->

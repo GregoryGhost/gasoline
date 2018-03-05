@@ -4,23 +4,30 @@ module TestGibdd =
     open Fuchu.Tests
     open Fuchu
     open Var
+    open Requirements
     open ModelService.Converters
+    open Converters
+
+    let testCheck checker record =
+        let expected = 
+            record.Requirement 
+            |> Option.get
+            |> ToText
+                
+        let actual =
+            record.Data |> toVehicleModel
+            |> checker
+
+        Assert.NotEqual("", expected, actual)
 
     let testMethods = 
         testList "Validate methods of Gibdd" [
-            testCase "Check Name" <| (fun _ ->
-                let expected = 
-                    errorInvalidCharacter
-                    |> Option.get
-                    |> ToText
-
-                let actual = 
-                    invalidName
-                    |> toVehicleModel
-                    |> gibdd.CheckName
-
-                Assert.Equal("", expected, actual)
-            );
+            testList "Check Name" [
+                testCase "invalid character" <| (fun _ ->
+                    invalidChar
+                    |> testCheck gibdd.CheckName
+                );
+            ];
 
             testCase "Check Engine Power" <| (fun _ ->
                 let expected = 
