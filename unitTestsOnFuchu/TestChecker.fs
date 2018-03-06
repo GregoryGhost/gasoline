@@ -23,6 +23,12 @@ module TestChecker =
         let testCheckWeight = testCheck checker.CheckWeight
         let testCheckTankCapacity = testCheck checker.CheckTankCapacity
 
+        let checkBelowParam checker value =
+            testCase "below min value" <| (fun _ -> value |> checker);
+            
+        let checkAboveParam checker value =
+             testCase "above max value" <| (fun _ -> value |> checker);
+
         testList "Validate methods of check errors of Checker" [
             testList "Check Name" [
                 testCase "invalid character" <| (fun _ ->
@@ -47,38 +53,20 @@ module TestChecker =
             ];
 
             testList "Check Engine Power" [
-                testCase "below min value" <| (fun _ ->
-                    belowMinEnginePower
-                    |> testCheckEnginePower
-                );
+                checkBelowParam testCheckEnginePower belowMinEnginePower
 
-                testCase "above max value" <| (fun _ ->
-                    aboveMaxEnginePower
-                    |> testCheckEnginePower
-                );
+                checkAboveParam testCheckEnginePower aboveMaxEnginePower
             ];
 
             testList "Check Weight" [
-                testCase "below min value" <| (fun _ ->
-                    belowMinWeight
-                    |> testCheckWeight
-                );
+                checkBelowParam testCheckWeight belowMinWeight
 
-                testCase "above max value" <| (fun _ ->
-                    aboveMaxWeight
-                    |> testCheckWeight
-                );
+                checkAboveParam testCheckWeight aboveMaxWeight
             ];
 
             testList "Check Tank Capacity" [
-                testCase "below min value" <| (fun _ ->
-                    belowMinTankCapacity
-                    |> testCheckTankCapacity
-                );
+                checkBelowParam testCheckTankCapacity belowMinTankCapacity
 
-                testCase "above max value" <| (fun _ ->
-                    aboveMaxTankCapacity
-                    |> testCheckTankCapacity
-                );
+                checkAboveParam testCheckTankCapacity aboveMaxTankCapacity
             ]
         ];
