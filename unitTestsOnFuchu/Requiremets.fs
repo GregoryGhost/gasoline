@@ -52,11 +52,35 @@ module Requirements =
         |> AboveTheMaximum
         |> forEnginePower
 
+    let forWeight param = 
+        param
+        |> Weight
+        |> Some
+
     let errorMinWeight =
         Demands.minWeight |> int
         |> BelowTheMinimum
-        |> Weight
+        |> forWeight
+
+    let errorMaxWeight =
+        Demands.maxWeight |> int
+        |> AboveTheMaximum
+        |> forWeight
+
+    let forTankCapacity param =
+        param 
+        |> TankCapacity
         |> Some
+
+    let errorMinTankCapacity =
+        Demands.minTankCapacity
+        |> BelowTheMinimum
+        |> forTankCapacity
+    
+    let errorMaxTankCapacity =
+        Demands.maxTankCapacity
+        |> AboveTheMaximum
+        |> forTankCapacity
 
     let invalidChar = 
                 { Data = {validVehicle 
@@ -91,16 +115,21 @@ module Requirements =
                 { Data = {validVehicle 
                             with weight = minWeight - 10.}
                   Requirement = errorMinWeight }
-        
-    let invalidTankCapacity =
-        {validVehicle 
-            with tankCapacity = minTankCapacity - 10}
 
-    let errorMinTankCapacity =
-        Demands.minTankCapacity
-        |> BelowTheMinimum
-        |> TankCapacity
-        |> Some
+    let aboveMaxWeight = 
+                { Data = {validVehicle 
+                            with weight = maxWeight + 10.}
+                  Requirement = errorMaxWeight }
+
+    let belowMinTankCapacity = 
+                { Data = {validVehicle 
+                            with tankCapacity = minTankCapacity - 10}
+                  Requirement = errorMinTankCapacity }
+
+    let aboveMaxTankCapacity = 
+                { Data = {validVehicle 
+                            with tankCapacity = maxTankCapacity + 10}
+                  Requirement = errorMaxTankCapacity }
 
     
 module Converters = 
