@@ -36,6 +36,12 @@ module Requirements =
         [Empty]
         |> forName
 
+    let errorMinEnginePower =
+        minEnginePower
+        |> BelowTheMinimum
+        |> EnginePower
+        |> Some
+
     let invalidChar = 
                 { Data = {validVehicle 
                             with name = "mazda#22"}
@@ -54,10 +60,11 @@ module Requirements =
                 { Data = {validVehicle 
                             with name = System.String.Empty}
                   Requirement = errorEmptyName }
-
-    let invalidEnginePower =
-        {validVehicle
-            with enginePower = minEnginePower - 10}
+    
+    let belowMinEnginePower = 
+                { Data = {validVehicle
+                            with enginePower = minEnginePower - 10}
+                  Requirement = errorMinEnginePower }
 
     let invalidWeight =
         {validVehicle 
@@ -66,12 +73,6 @@ module Requirements =
     let invalidTankCapacity =
         {validVehicle 
             with tankCapacity = minTankCapacity - 10}
-
-    let errorMinEnginePower =
-        minEnginePower
-        |> BelowTheMinimum
-        |> EnginePower
-        |> Some
 
     let errorMinWeight =
         Demands.minWeight |> int

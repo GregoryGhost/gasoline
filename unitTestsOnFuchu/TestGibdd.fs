@@ -34,19 +34,19 @@ module TestGibdd =
                 );
             ];
 
-            testCase "Check Engine Power" <| (fun _ ->
-                let expected = 
-                    errorMinEnginePower
-                    |> Option.get
-                    |> ToText
+            //testCase "Check Engine Power" <| (fun _ ->
+            //    let expected = 
+            //        errorMinEnginePower
+            //        |> Option.get
+            //        |> ToText
 
-                let actual = 
-                    invalidEnginePower
-                    |> toVehicleModel
-                    |> gibdd.CheckEnginePower
+            //    let actual = 
+            //        invalidEnginePower
+            //        |> toVehicleModel
+            //        |> gibdd.CheckEnginePower
 
-                Assert.Equal("", expected, actual)
-            );
+            //    Assert.Equal("", expected, actual)
+            //);
 
             testCase "Check Weight" <| (fun _ ->
                 let expected = 
