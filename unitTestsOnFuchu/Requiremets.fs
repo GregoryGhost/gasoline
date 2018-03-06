@@ -52,6 +52,12 @@ module Requirements =
         |> AboveTheMaximum
         |> forEnginePower
 
+    let errorMinWeight =
+        Demands.minWeight |> int
+        |> BelowTheMinimum
+        |> Weight
+        |> Some
+
     let invalidChar = 
                 { Data = {validVehicle 
                             with name = "mazda#22"}
@@ -81,19 +87,14 @@ module Requirements =
                             with enginePower = maxEnginePower + 10}
                   Requirement = errorMaxEnginePower }
 
-    let invalidWeight =
-        {validVehicle 
-            with weight = minWeight - 10.}
+    let belowMinWeight = 
+                { Data = {validVehicle 
+                            with weight = minWeight - 10.}
+                  Requirement = errorMinWeight }
         
     let invalidTankCapacity =
         {validVehicle 
             with tankCapacity = minTankCapacity - 10}
-
-    let errorMinWeight =
-        Demands.minWeight |> int
-        |> BelowTheMinimum
-        |> Weight
-        |> Some
 
     let errorMinTankCapacity =
         Demands.minTankCapacity

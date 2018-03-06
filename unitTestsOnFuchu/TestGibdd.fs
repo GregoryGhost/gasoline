@@ -48,19 +48,19 @@ module TestGibdd =
             //    Assert.Equal("", expected, actual)
             //);
 
-            testCase "Check Weight" <| (fun _ ->
-                let expected = 
-                    errorMinWeight
-                    |> Option.get
-                    |> ToText
+            //testCase "Check Weight" <| (fun _ ->
+            //    let expected = 
+            //        errorMinWeight
+            //        |> Option.get
+            //        |> ToText
 
-                let actual = 
-                    invalidWeight
-                    |> toVehicleModel
-                    |> gibdd.CheckWeight
+            //    let actual = 
+            //        invalidWeight
+            //        |> toVehicleModel
+            //        |> gibdd.CheckWeight
 
-                Assert.Equal("", expected, actual)
-            );
+            //    Assert.Equal("", expected, actual)
+            //);
 
             testCase "Check Tank Capacity" <| (fun _ ->
                 let expected = 

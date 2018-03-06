@@ -20,6 +20,7 @@ module TestChecker =
     let tests = 
         let testCheckName = testCheck checker.CheckName
         let testCheckEnginePower = testCheck checker.CheckEnginePower
+        let testCheckWeight = testCheck checker.CheckWeight
 
         testList "Validate methods of check errors of Checker" [
             testList "Check Name" [
@@ -56,16 +57,12 @@ module TestChecker =
                 );
             ];
 
-            testCase "Check Weight" <| (fun _ ->
-                let expected = 
-                    errorMinWeight
-
-                let actual = 
-                    invalidWeight
-                    |> checker.CheckWeight
-
-                Assert.Equal("", expected, actual);
-            );
+            testList "Check Weight" [
+                testCase "below min value" <| (fun _ ->
+                    belowMinWeight
+                    |> testCheckWeight
+                );
+            ];
 
             testCase "Check Tank Capacity" <| (fun _ ->
                 let expected = 
