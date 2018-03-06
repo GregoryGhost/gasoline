@@ -18,26 +18,28 @@ module TestChecker =
         Assert.Equal("", expected, actual)
 
     let tests = 
+        let testCheckName = testCheck checker.CheckName
+
         testList "Validate methods of check errors of Checker" [
             testList "Check Name" [
                 testCase "invalid character" <| (fun _ ->
                     invalidChar
-                    |> testCheck checker.CheckName
+                    |> testCheckName
                 );
 
                 testCase "above max symbol" <| (fun _ ->
                     aboveMaxSymbol
-                    |> testCheck checker.CheckName
+                    |> testCheckName
                 );
 
                 testCase "below min symbol" <| (fun _ ->
                     belowMinSymbol
-                    |> testCheck checker.CheckName
+                    |> testCheckName
                 );
 
                 testCase "empty string" <| (fun _ ->
                     emptyName
-                    |> testCheck checker.CheckName
+                    |> testCheckName
                 );
             ];
 
