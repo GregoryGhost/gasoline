@@ -49,6 +49,11 @@ module TestChecker =
                     belowMinEnginePower
                     |> testCheckEnginePower
                 );
+
+                testCase "above max value" <| (fun _ ->
+                    aboveMaxEnginePower
+                    |> testCheckEnginePower
+                );
             ];
 
             testCase "Check Weight" <| (fun _ ->

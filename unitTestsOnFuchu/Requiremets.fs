@@ -36,11 +36,21 @@ module Requirements =
         [Empty]
         |> forName
 
+    
+    let forEnginePower param = 
+        param
+        |> EnginePower
+        |> Some
+
     let errorMinEnginePower =
         minEnginePower
         |> BelowTheMinimum
-        |> EnginePower
-        |> Some
+        |> forEnginePower
+
+    let errorMaxEnginePower =
+        maxEnginePower
+        |> AboveTheMaximum
+        |> forEnginePower
 
     let invalidChar = 
                 { Data = {validVehicle 
@@ -65,6 +75,11 @@ module Requirements =
                 { Data = {validVehicle
                             with enginePower = minEnginePower - 10}
                   Requirement = errorMinEnginePower }
+
+    let aboveMaxEnginePower = 
+                { Data = {validVehicle
+                            with enginePower = maxEnginePower + 10}
+                  Requirement = errorMaxEnginePower }
 
     let invalidWeight =
         {validVehicle 
