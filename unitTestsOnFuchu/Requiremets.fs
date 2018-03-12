@@ -84,51 +84,51 @@ module Requirements =
 
     let invalidChar = 
                 { Data = {validVehicle 
-                            with name = "mazda#22"}
+                            with Name = "mazda#22"}
                   Requirement = errorInvalidCharacter }
 
     let aboveMaxSymbol = 
                 { Data = {validVehicle 
-                            with name = maxSymbol |> genName}
+                            with Name = maxSymbol |> genName}
                   Requirement = errorMaxSymbolName }
     
     let belowMinSymbol = 
                 { Data = {validVehicle 
-                            with name = minName}
+                            with Name = minName}
                   Requirement = errorMinSymbolName }
     let emptyName = 
                 { Data = {validVehicle 
-                            with name = System.String.Empty}
+                            with Name = System.String.Empty}
                   Requirement = errorEmptyName }
     
     let belowMinEnginePower = 
                 { Data = {validVehicle
-                            with enginePower = minEnginePower - 10}
+                            with EnginePower = minEnginePower - 10}
                   Requirement = errorMinEnginePower }
 
     let aboveMaxEnginePower = 
                 { Data = {validVehicle
-                            with enginePower = maxEnginePower + 10}
+                            with EnginePower = maxEnginePower + 10}
                   Requirement = errorMaxEnginePower }
 
     let belowMinWeight = 
                 { Data = {validVehicle 
-                            with weight = minWeight - 10.}
+                            with Weight = minWeight - 10.}
                   Requirement = errorMinWeight }
 
     let aboveMaxWeight = 
                 { Data = {validVehicle 
-                            with weight = maxWeight + 10.}
+                            with Weight = maxWeight + 10.}
                   Requirement = errorMaxWeight }
 
     let belowMinTankCapacity = 
                 { Data = {validVehicle 
-                            with tankCapacity = minTankCapacity - 10}
+                            with TankCapacity = minTankCapacity - 10}
                   Requirement = errorMinTankCapacity }
 
     let aboveMaxTankCapacity = 
                 { Data = {validVehicle 
-                            with tankCapacity = maxTankCapacity + 10}
+                            with TankCapacity = maxTankCapacity + 10}
                   Requirement = errorMaxTankCapacity }
 
     
@@ -137,8 +137,8 @@ module Converters =
 
     let toVehicleModel x =
         new VehicleModel(
-            x.name
-            ,x.enginePower
-            ,x.weight
-            ,x.resistanceWithMedian
-            ,x.tankCapacity)
+            x.Name
+            ,x.EnginePower
+            ,x.Weight
+            ,x.ResistanceWithMedian
+            ,x.TankCapacity)

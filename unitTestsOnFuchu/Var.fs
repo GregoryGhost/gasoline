@@ -4,11 +4,11 @@ module Var =
     open ModelService
 
     //validVehicle и modelVehicle содержат одни и те же данные
-    let validVehicle = {name = "mazda_rx-8"; 
-            enginePower = 192;
-            weight = 1429.0;
-            resistanceWithMedian = Environment.Asphalt;
-            tankCapacity = 65;}
+    let validVehicle = {Name = "mazda_rx-8"; 
+            EnginePower = 192;
+            Weight = 1429.0;
+            ResistanceWithMedian = Environment.Asphalt;
+            TankCapacity = 65;}
     
     let modelVehicle = new VehicleModel()
 
