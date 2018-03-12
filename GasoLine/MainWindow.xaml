@@ -14,7 +14,7 @@
             </Style>
         </StackPanel.Resources>
         <Menu>
-            <MenuItem Header="File">
+            <MenuItem Header="Файл">
                 <MenuItem Header="Новый файл" Click="New_Click"></MenuItem>
                 <MenuItem Header="Открыть" Click="Open_Click"></MenuItem>
                 <MenuItem Header="Сохранить" Click="SaveItems_Click"></MenuItem>
@@ -45,9 +45,9 @@
             </ListView.View>
         </ListView>
         <StackPanel Orientation="Horizontal">
-            <Button Name="Добавить" Click="Add_Click">Add</Button>
-            <Button Name="Редактировать" Click="Edit_Click">Edit</Button>
-            <Button Name="Удалить" Click="Remove_Click">Remove</Button>
+            <Button Name="Add" Click="Add_Click">Добавить</Button>
+            <Button Name="Edit" Click="Edit_Click">Редактировать</Button>
+            <Button Name="Remove" Click="Remove_Click">Удалить</Button>
         </StackPanel>
     </StackPanel>
 </Window>

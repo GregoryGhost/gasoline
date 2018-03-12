@@ -39,19 +39,19 @@ module internal InspectorGadget =
        sprintf @"^([\w\-_]){%d,%d}$" minSymbol maxSymbol
 
     let checkEmpty     vehicle = 
-        vehicle.name 
+        vehicle.Name 
         |> String.length = 0
 
     let checkAboveMax  vehicle = 
-        vehicle.name 
+        vehicle.Name 
         |> String.length > maxSymbol
 
     let checkBellowMin vehicle = 
-        vehicle.name 
+        vehicle.Name 
         |> String.length < minSymbol
 
     let checkName vehicle = 
-        let isOk = Regex.IsMatch(vehicle.name, patternForName)
+        let isOk = Regex.IsMatch(vehicle.Name, patternForName)
 
         if isOk then 
             None
@@ -79,12 +79,12 @@ module internal InspectorGadget =
                     |> Some
 
     let checkEnginePower vehicle = 
-        if vehicle.enginePower > maxEnginePower then
+        if vehicle.EnginePower > maxEnginePower then
             maxEnginePower
             |> AboveTheMaximum
             |> RequirementsForVehicle.EnginePower
             |> Some
-        elif vehicle.enginePower < minEnginePower then
+        elif vehicle.EnginePower < minEnginePower then
             minEnginePower
             |> BelowTheMinimum
             |> RequirementsForVehicle.EnginePower
@@ -93,12 +93,12 @@ module internal InspectorGadget =
             None
     
     let checkTankCapacity vehicle = 
-        if vehicle.tankCapacity > maxTankCapacity then
+        if vehicle.TankCapacity > maxTankCapacity then
             maxTankCapacity
             |> AboveTheMaximum
             |> RequirementsForVehicle.TankCapacity
             |> Some
-        elif vehicle.tankCapacity < minTankCapacity then
+        elif vehicle.TankCapacity < minTankCapacity then
             minTankCapacity
             |> BelowTheMinimum
             |> RequirementsForVehicle.TankCapacity
@@ -107,12 +107,12 @@ module internal InspectorGadget =
             None
 
     let checkWeight vehicle = 
-        if vehicle.weight < minWeight then
+        if vehicle.Weight < minWeight then
             int minWeight
             |> BelowTheMinimum
             |> RequirementsForVehicle.Weight
             |> Some
-        elif vehicle.weight > maxWeight then
+        elif vehicle.Weight > maxWeight then
             int maxWeight
             |> AboveTheMaximum
             |> RequirementsForVehicle.Weight

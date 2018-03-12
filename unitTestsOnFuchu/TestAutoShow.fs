@@ -8,7 +8,7 @@ module TestAutoShow =
     let testUpdateVehicle = 
         testList "Update vehicle to auto show" [
             testCase "new record" <| (fun _ ->
-                let newV = {validVehicle with enginePower = 225}
+                let newV = {validVehicle with EnginePower = 225}
 
                 autoShow.ClearAllVehicle()
                 autoShow.AddVehicle(validVehicle) |> ignore
@@ -43,7 +43,7 @@ module TestAutoShow =
             );
 
             testCase "some record" <| (fun _ ->
-                let v1 = {validVehicle with enginePower = 222}
+                let v1 = {validVehicle with EnginePower = 222}
 
                 autoShow.ClearAllVehicle()
                 autoShow.AddVehicle(validVehicle) |> ignore

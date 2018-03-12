@@ -17,7 +17,7 @@ module Tests =
             ;TestVehicleModel.testProperties
             ;TestVehicleModel.testMethods
             ;TestChecker.tests
-            ;TestGibdd.testMethods
+            ;TestGibdd.tests
             ;TestGibdd.testToText
             ;TestEnvironmentConvert.testReadFromString
         ]

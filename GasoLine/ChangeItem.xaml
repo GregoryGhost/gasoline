@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GasoLine"
         mc:Ignorable="d"
-        Title="ChangeItem" Height="210" Width="330">
+        Title="Работа с записью" Height="210" Width="330">
     <StackPanel Margin="5" Width="300">
         <StackPanel.Resources>
             <Style TargetType="HeaderedContentControl">
@@ -100,8 +100,8 @@
             </TextBox>
         </HeaderedContentControl>
         <StackPanel Orientation="Horizontal">
-            <Button IsDefault="True" Click="Submit_Click">_Submit</Button>
-            <Button IsCancel="True">_Cancel</Button>
+            <Button IsDefault="True" Click="Submit_Click">Принять</Button>
+            <Button IsCancel="True">Отмена</Button>
         </StackPanel>
     </StackPanel>
 </Window>

@@ -32,13 +32,13 @@ module private Converter =
         | _ -> Environment.NANI
 
  let toVehicle (r : JRecords.Root) = 
-        { name = r.Name
-          ;enginePower = r.EnginePower
-          ;weight = r.Weight |> double
-          ;resistanceWithMedian = 
+        { Name = r.Name
+          ;EnginePower = r.EnginePower
+          ;Weight = r.Weight |> double
+          ;ResistanceWithMedian = 
             r.ResistanceWithMedian 
             |> toResistance
-          ;tankCapacity = r.TankCapacity }
+          ;TankCapacity = r.TankCapacity }
  
  let toVehicles (jrecords : JRecords.Root[]) =
         let mutable vehicles : Vehicle list = []
@@ -50,11 +50,11 @@ module private Converter =
         vehicles
 
  let toJson (v : Vehicle) =
-        JParameters.Root(v.name
-                         ,v.enginePower
-                         ,decimal v.weight
-                         ,int v.resistanceWithMedian
-                         ,v.tankCapacity)
+        JParameters.Root(v.Name
+                         ,v.EnginePower
+                         ,v.Weight |> decimal 
+                         ,v.ResistanceWithMedian |> int 
+                         ,v.TankCapacity)
 
  let toJsons (vehicles : Vehicle list) =
         vehicles
