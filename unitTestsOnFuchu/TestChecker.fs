@@ -3,52 +3,70 @@
 module TestChecker = 
     open Fuchu.Tests
     open Fuchu
-    open Var
-    open ModelService.Demands
     open ModelService
+    open Var
+    open Requirements
+
+
+    let testCheck checker record =
+        let expected = record.Requirement 
+                
+        let actual =
+            record.Data
+            |> checker
+
+        Assert.Equal("", expected, actual)
 
     let tests = 
+        let testCheckName = testCheck checker.CheckName
+        let testCheckEnginePower = testCheck checker.CheckEnginePower
+        let testCheckWeight = testCheck checker.CheckWeight
+        let testCheckTankCapacity = testCheck checker.CheckTankCapacity
+
+        let checkBelowParam checker value =
+            testCase "below min value" <| (fun _ -> value |> checker);
+            
+        let checkAboveParam checker value =
+             testCase "above max value" <| (fun _ -> value |> checker);
+
         testList "Validate methods of check errors of Checker" [
-            testCase "Check Name" <| (fun _ ->
-                let expected = errorInvalidCharacter  
-                
-                let actual =
-                    invalidName
-                    |> checker.CheckName
+            testList "Check Name" [
+                testCase "invalid character" <| (fun _ ->
+                    invalidChar
+                    |> testCheckName
+                );
 
-                Assert.Equal("", expected, actual);
-            );
+                testCase "above max symbol" <| (fun _ ->
+                    aboveMaxSymbol
+                    |> testCheckName
+                );
 
-            testCase "Check Engine Power" <| (fun _ ->
-                let expected = 
-                    errorMinEnginePower
-                    
-                let actual = 
-                    invalidEnginePower
-                    |> checker.CheckEnginePower
+                testCase "below min symbol" <| (fun _ ->
+                    belowMinSymbol
+                    |> testCheckName
+                );
 
-                Assert.Equal("", expected, actual);
-            );
+                testCase "empty string" <| (fun _ ->
+                    emptyName
+                    |> testCheckName
+                );
+            ];
 
-            testCase "Check Weight" <| (fun _ ->
-                let expected = 
-                    errorMinWeight
+            testList "Check Engine Power" [
+                checkBelowParam testCheckEnginePower belowMinEnginePower
 
-                let actual = 
-                    invalidWeight
-                    |> checker.CheckWeight
+                checkAboveParam testCheckEnginePower aboveMaxEnginePower
+            ];
 
-                Assert.Equal("", expected, actual);
-            );
+            testList "Check Weight" [
+                checkBelowParam testCheckWeight belowMinWeight
 
-            testCase "Check Tank Capacity" <| (fun _ ->
-                let expected = 
-                    errorMinTankCapacity
-                    
-                let actual = 
-                    invalidTankCapacity
-                    |> checker.CheckTankCapacity
+                checkAboveParam testCheckWeight aboveMaxWeight
+            ];
 
-                Assert.Equal("", expected, actual);
-            );
+            testList "Check Tank Capacity" [
+                checkBelowParam testCheckTankCapacity belowMinTankCapacity
+
+                checkAboveParam testCheckTankCapacity aboveMaxTankCapacity
+            ]
         ];

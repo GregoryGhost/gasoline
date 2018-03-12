@@ -4,65 +4,74 @@ module TestGibdd =
     open Fuchu.Tests
     open Fuchu
     open Var
+    open Requirements
     open ModelService.Converters
+    open Converters
 
-    let testMethods = 
-        testList "Validate methods of Gibdd" [
-            testCase "Check Name" <| (fun _ ->
-                let expected = 
-                    errorInvalidCharacter
-                    |> Option.get
-                    |> ToText
+    let testCheck checker record =
+        let expected = 
+            record.Requirement 
+            |> Option.get
+            |> ToText
+                
+        let actual =
+            record.Data |> toVehicleModel
+            |> checker
 
-                let actual = 
-                    invalidName
-                    |> toVehicleModel
-                    |> gibdd.CheckName
+        Assert.Equal("", expected, actual)
 
-                Assert.Equal("", expected, actual)
-            );
+    let tests = 
+        let testCheckName = testCheck gibdd.CheckName
+        let testCheckEnginePower = testCheck gibdd.CheckEnginePower
+        let testCheckWeight = testCheck gibdd.CheckWeight
+        let testCheckTankCapacity = testCheck gibdd.CheckTankCapacity
 
-            testCase "Check Engine Power" <| (fun _ ->
-                let expected = 
-                    errorMinEnginePower
-                    |> Option.get
-                    |> ToText
+        let checkBelowParam checker value =
+            testCase "below min value" <| (fun _ -> value |> checker);
+            
+        let checkAboveParam checker value =
+             testCase "above max value" <| (fun _ -> value |> checker);
 
-                let actual = 
-                    invalidEnginePower
-                    |> toVehicleModel
-                    |> gibdd.CheckEnginePower
+        testList "Validate methods of check errors of Checker" [
+            testList "Check Name" [
+                testCase "invalid character" <| (fun _ ->
+                    invalidChar
+                    |> testCheckName
+                );
 
-                Assert.Equal("", expected, actual)
-            );
+                testCase "above max symbol" <| (fun _ ->
+                    aboveMaxSymbol
+                    |> testCheckName
+                );
 
-            testCase "Check Weight" <| (fun _ ->
-                let expected = 
-                    errorMinWeight
-                    |> Option.get
-                    |> ToText
+                testCase "below min symbol" <| (fun _ ->
+                    belowMinSymbol
+                    |> testCheckName
+                );
 
-                let actual = 
-                    invalidWeight
-                    |> toVehicleModel
-                    |> gibdd.CheckWeight
+                testCase "empty string" <| (fun _ ->
+                    emptyName
+                    |> testCheckName
+                );
+            ];
 
-                Assert.Equal("", expected, actual)
-            );
+            testList "Check Engine Power" [
+                checkBelowParam testCheckEnginePower belowMinEnginePower
 
-            testCase "Check Tank Capacity" <| (fun _ ->
-                let expected = 
-                    errorMinTankCapacity
-                    |> Option.get
-                    |> ToText
+                checkAboveParam testCheckEnginePower aboveMaxEnginePower
+            ];
 
-                let actual = 
-                    invalidTankCapacity
-                    |> toVehicleModel
-                    |> gibdd.CheckTankCapacity
+            testList "Check Weight" [
+                checkBelowParam testCheckWeight belowMinWeight
 
-                Assert.Equal("", expected, actual)
-            );
+                checkAboveParam testCheckWeight aboveMaxWeight
+            ];
+
+            testList "Check Tank Capacity" [
+                checkBelowParam testCheckTankCapacity belowMinTankCapacity
+
+                checkAboveParam testCheckTankCapacity aboveMaxTankCapacity
+            ]
         ];
     
     let testToText =

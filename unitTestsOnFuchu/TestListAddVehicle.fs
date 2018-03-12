@@ -64,7 +64,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle name - above max symbol" <| (fun _ ->
-                let genMaxName = String.replicate 20 "test"
+                let genMaxName = maxSymbol |> Requirements.genName
                 let v1 = {validVehicle with name = genMaxName}
 
                 autoShow.ClearAllVehicle()

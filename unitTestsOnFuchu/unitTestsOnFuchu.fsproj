@@ -57,13 +57,14 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Var.fs" />
+    <Compile Include="Requiremets.fs" />
+    <Compile Include="TestVehicleModel.fs" />
     <Compile Include="TestEnvironmentConvert.fs" />
-    <Compile Include="TestListAddVehicle.fs" />
-    <Compile Include="CalcFuelConsumption.fs" />
     <Compile Include="TestChecker.fs" />
     <Compile Include="TestGibdd.fs" />
+    <Compile Include="CalcFuelConsumption.fs" />
+    <Compile Include="TestListAddVehicle.fs" />
     <Compile Include="TestAutoShow.fs" />
-    <Compile Include="TestVehicleModel.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
