@@ -75,12 +75,27 @@ namespace GasoLine
         public bool Open(string path)
         {
             var bd = AutoShow.Instance;
-            //NOTE: удаление записей из БД перед повторным добавлением записей в БД - КОСТЫЛЬ!!!
+            //NOTE: удаление записей из БД 
+            //  перед повторным добавлением 
+            //  записей в БД - КОСТЫЛЬ!!!
             bd.ClearAllVehicle();
-            bd.Load(path);
+            var result = true;
+            try
+            {
+                bd.Load(path);
+            }
+            catch (Exception e)
+            {
+                //NOTE: преждевременный выход
+                //  потому, что неверные формат 
+                //  записей Vehicle
+                //  в загружаемом JSON-файле
+                result = false;
+                return result;
+            }
 
             var vehicles = bd.GetAllVehicles;
-            var result = vehicles.Any();
+            result = vehicles.Any();
             this.ClearItems();
 
             vehicles
