@@ -9,7 +9,7 @@ module CalcFuelConsumption =
     let testingCalcFuelConsumption enviroment expected  =
         let mes = 
             {validVehicle with 
-                resistanceWithMedian = enviroment}
+                ResistanceWithMedian = enviroment}
             |> Manager.CalcFuelConsumption
 
         Assert.Equal("", expected, mes)
@@ -50,7 +50,7 @@ module CalcFuelConsumption =
             testCase "invalid enginePower" <| (fun _ ->
                 let mes = 
                     {validVehicle 
-                        with enginePower = maxEnginePower + 10}
+                        with EnginePower = maxEnginePower + 10}
                     |> Manager.CalcFuelConsumption
 
                 let expected = Environment.NANI.ToString()

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace GasoLine
@@ -119,6 +120,9 @@ namespace GasoLine
                 {
                     _path = _defaultPath;
                 }
+
+                if(CheckEmptyRecords(t)) { return; }
+
                 if (t.Save(_path))
                 {
                     MessageBox.Show(
@@ -140,6 +144,26 @@ namespace GasoLine
                 }
             }
 
+        }
+
+        private bool CheckEmptyRecords(Vehicles t)
+        {
+            var result = false;
+
+            if (t.Count == 0)
+            {
+                MessageBox.Show(
+                    $"Отсутствуют записи для сохранения",
+                    "Сохранение",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
+
+                _saveData = true;
+
+                result = true;
+            }
+
+            return result;
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -264,6 +288,9 @@ namespace GasoLine
 
         private void SaveAs_Click(object sender, RoutedEventArgs e)
         {
+            var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            if (CheckEmptyRecords(t)) { return; }
+
             var dlg = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = "Document",
@@ -283,6 +310,9 @@ namespace GasoLine
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            var t = (Vehicles)this.Resources[nameof(Vehicles)];
+            if (t.Count == 0) { return; }
+
             var result = MessageBox.Show(
                 "Вы уверены что хотите выйти?\n" +
                 "Есть несохраненные данные, сохранить их?",

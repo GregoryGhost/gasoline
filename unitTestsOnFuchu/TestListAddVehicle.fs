@@ -29,11 +29,11 @@ module TestListAddVehicle =
 
             testCase "invalid vehicle properties, except resistance with median" <| (fun _ ->
                 let num = 10
-                let invalidVehicle = {name = "&&&&**";
-                        enginePower = Demands.maxEnginePower + num;
-                        weight = Demands.maxWeight + float num;
-                        resistanceWithMedian = Environment.NANI;
-                        tankCapacity = Demands.maxEnginePower + num}
+                let invalidVehicle = {Name = "&&&&**";
+                        EnginePower = Demands.maxEnginePower + num;
+                        Weight = Demands.maxWeight + float num;
+                        ResistanceWithMedian = Environment.NANI;
+                        TankCapacity = Demands.maxEnginePower + num}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle invalidVehicle
@@ -48,7 +48,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle name - below min symbol" <| (fun _ ->
-                let v1 = {validVehicle with name = "test"}
+                let v1 = {validVehicle with Name = "test"}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -65,7 +65,7 @@ module TestListAddVehicle =
 
             testCase "invalid vehicle name - above max symbol" <| (fun _ ->
                 let genMaxName = maxSymbol |> Requirements.genName
-                let v1 = {validVehicle with name = genMaxName}
+                let v1 = {validVehicle with Name = genMaxName}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -81,7 +81,7 @@ module TestListAddVehicle =
 
             testCase "invalid vehicle name - invalid character" <| (fun _ ->
                 let genName = String.replicate 10 "*"
-                let v1 = {validVehicle with name = genName}
+                let v1 = {validVehicle with Name = genName}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -96,7 +96,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle enginePower - below minimum" <| (fun _ ->
-                let v1 = {validVehicle with enginePower = -192}
+                let v1 = {validVehicle with EnginePower = -192}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -112,7 +112,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle enginePower - above maximum" <| (fun _ ->
-                let v1 = {validVehicle with enginePower = Demands.maxEnginePower + 1}
+                let v1 = {validVehicle with EnginePower = Demands.maxEnginePower + 1}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -128,7 +128,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle weight - below minimum" <| (fun _ ->
-                let v1 = {validVehicle with weight = Demands.minWeight - 10.0}
+                let v1 = {validVehicle with Weight = Demands.minWeight - 10.0}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -145,7 +145,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle weight - above maximum" <| (fun _ ->
-                let v1 = {validVehicle with weight = Demands.maxWeight + 10.0}
+                let v1 = {validVehicle with Weight = Demands.maxWeight + 10.0}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -162,7 +162,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle tank capacity - below minimum" <| (fun _ ->
-                let v1 = {validVehicle with tankCapacity = Demands.minTankCapacity - 10}
+                let v1 = {validVehicle with TankCapacity = Demands.minTankCapacity - 10}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
@@ -178,7 +178,7 @@ module TestListAddVehicle =
             );
 
             testCase "invalid vehicle tank capacity - above maximum" <| (fun _ ->
-                let v1 = {validVehicle with tankCapacity = Demands.maxTankCapacity + 10}
+                let v1 = {validVehicle with TankCapacity = Demands.maxTankCapacity + 10}
 
                 autoShow.ClearAllVehicle()
                 let errors = autoShow.AddVehicle v1
