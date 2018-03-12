@@ -140,11 +140,11 @@ namespace GasoLine
         }
 
         public VehicleViewModel(Vehicle v)
-            : this(v.name,
-                  v.enginePower,
-                  v.weight,
-                  v.resistanceWithMedian,
-                  v.tankCapacity)
+            : this(v.Name,
+                  v.EnginePower,
+                  v.Weight,
+                  v.ResistanceWithMedian,
+                  v.TankCapacity)
         { }
 
         public Vehicle GetVehicleModel => _currentData.ToVehicle();
