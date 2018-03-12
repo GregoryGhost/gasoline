@@ -11,50 +11,50 @@ type Environment =
     | NANI = 0
 
 type Vehicle = {
-                 name : string;     //ограничения от 1 до 20 символов
+                 Name : string;     //ограничения от 1 до 20 символов
                                         //- цифры или буквы, включая "-", "_"
-          enginePower : int;        //ограничения от 1 до 1*10^9 л.с.
-               weight : double;     //ограничения от 1 до 10^4 кг - double
- resistanceWithMedian : Environment;//ограничения - воздух,
+          EnginePower : int;        //ограничения от 1 до 1*10^9 л.с.
+               Weight : double;     //ограничения от 1 до 10^4 кг - double
+ ResistanceWithMedian : Environment;//ограничения - воздух,
                                         //вода, 
                                         //космос, 
                                         //земля, 
                                         //асфальт, 
                                         //грязь, 
                                         //пересеченная_местность
-         tankCapacity : int        }//ограничения - от 0 до 10^4 л
+         TankCapacity : int        }//ограничения - от 0 до 10^4 л
 with
     member internal this.CalcFuelConsumption =
-           let rs = this.resistanceWithMedian
+           let rs = this.ResistanceWithMedian
 
            match rs with
            | Environment.Air ->  //rs * (weight + tankCapacity) / enginePower
-               let calc = (this.weight + float this.tankCapacity) 
-                           / float this.enginePower
+               let calc = (this.Weight + float this.TankCapacity) 
+                           / float this.EnginePower
                calc * (float rs)
            | Environment.Ground -> //rs - (weight + tankCapacity) / enginePower
-               let calc = (this.weight + float this.tankCapacity) 
-                            / float this.enginePower
+               let calc = (this.Weight + float this.TankCapacity) 
+                            / float this.EnginePower
                (float rs) - calc
            | Environment.Asphalt -> //rs + (weight - tankCapacity) * enginePower
-               let calc = (this.weight + float this.tankCapacity) 
-                           * float this.enginePower
+               let calc = (this.Weight + float this.TankCapacity) 
+                           * float this.EnginePower
                (float rs) + calc
            | Environment.Dirt ->
                 //resistanceWithMedian * weight + tankCapacity) / enginePower
-               let calc = (float rs) * this.weight 
-               calc + (float <| this.tankCapacity / this.enginePower)
+               let calc = (float rs) * this.Weight 
+               calc + (float <| this.TankCapacity / this.EnginePower)
            | Environment.Space ->
                 //resistanceWithMedian * (weight + tankCapacity + enginePower)
-               let calc = this.weight 
-                          + float this.tankCapacity 
-                          + float this.enginePower
+               let calc = this.Weight 
+                          + float this.TankCapacity 
+                          + float this.EnginePower
                (float rs) * calc
            | Environment.RuggedTerrain ->
                 //resistanceWithMedian * (weight / tankCapacity) - enginePower
                let calc = (rs |> float)
-                          * (this.weight / (this.tankCapacity |> float))
-                          - (this.enginePower |> float)
+                          * (this.Weight / (this.TankCapacity |> float))
+                          - (this.EnginePower |> float)
                calc
            | _ -> 0.0
 
@@ -124,8 +124,8 @@ type VehicleModel(name, enginePower, weight, resistance, tankCapacity) =
     /// Конвертирует в запись о транспортном средстве
     /// </summary>
     member this.ToVehicle() =
-        {name = this.Name
-        ;enginePower = this.EnginePower
-        ;weight = this.Weight
-        ;resistanceWithMedian = this.Resistance
-        ;tankCapacity = this.TankCapacity}
+        {Name = this.Name
+        ;EnginePower = this.EnginePower
+        ;Weight = this.Weight
+        ;ResistanceWithMedian = this.Resistance
+        ;TankCapacity = this.TankCapacity}
